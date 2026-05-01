@@ -1,36 +1,80 @@
 .auth-page {
-  min-height: 100vh;
+  min-height: calc(100vh - 64px);
   display: flex;
   align-items: center;
   justify-content: center;
-  background-color: var(--color-background);
-  padding: var(--spacing-md);
+  background-color: var(--color-surface);
+  padding: var(--spacing-2xl) var(--spacing-xl);
+}
+
+.auth-container {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--spacing-2xl);
+  max-width: 1100px;
+  width: 100%;
+  align-items: center;
+}
+
+/* Left Side */
+.auth-left {
+  padding-right: var(--spacing-2xl);
+}
+
+.auth-crown {
+  margin-bottom: var(--spacing-lg);
+}
+
+.auth-title {
+  font-size: 2rem;
+  font-weight: 700;
+  color: var(--color-text);
+  margin-bottom: var(--spacing-sm);
+  line-height: 1.2;
+}
+
+.auth-subtitle {
+  font-size: var(--font-size-md);
+  color: var(--color-text-muted);
+  margin-bottom: var(--spacing-xl);
+  line-height: 1.6;
+}
+
+.auth-benefits {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-md);
+}
+
+.auth-benefits li {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+  font-size: var(--font-size-md);
+  color: var(--color-text-muted);
+}
+
+.benefit-check {
+  color: var(--color-primary);
+  font-weight: 700;
+  font-size: var(--font-size-lg);
+  flex-shrink: 0;
+}
+
+/* Right Side */
+.auth-right {
+  display: flex;
+  justify-content: center;
 }
 
 .auth-card {
   background: var(--color-surface);
+  border: 1px solid var(--color-border);
   border-radius: var(--radius-lg);
-  box-shadow: var(--shadow-md);
   padding: var(--spacing-2xl);
   width: 100%;
-  max-width: 440px;
-}
-
-.auth-header {
-  text-align: center;
-  margin-bottom: var(--spacing-xl);
-}
-
-.auth-header h1 {
-  font-size: var(--font-size-xl);
-  font-weight: 700;
-  color: var(--color-primary-dark);
-  margin-bottom: var(--spacing-xs);
-}
-
-.auth-header p {
-  color: var(--color-text-muted);
-  font-size: var(--font-size-sm);
+  max-width: 480px;
 }
 
 .auth-error {
@@ -57,24 +101,51 @@
 
 .form-group label {
   font-size: var(--font-size-sm);
-  font-weight: 600;
+  font-weight: 500;
   color: var(--color-text);
 }
 
 .form-group input {
+  width: 100%;
   padding: var(--spacing-sm) var(--spacing-md);
   border: 1px solid var(--color-border);
   border-radius: var(--radius-md);
   font-size: var(--font-size-md);
   font-family: var(--font-base);
-  background: var(--color-background);
-  transition: border-color 0.2s;
+  color: var(--color-text);
+  background: var(--color-surface);
   outline: none;
+  transition: border-color 0.2s;
 }
 
 .form-group input:focus {
   border-color: var(--color-primary);
-  background: var(--color-surface);
+}
+
+.input-with-icon {
+  position: relative;
+}
+
+.input-with-icon input {
+  padding-right: 44px;
+}
+
+.eye-toggle {
+  position: absolute;
+  right: var(--spacing-sm);
+  top: 50%;
+  transform: translateY(-50%);
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: var(--color-text-muted);
+  display: flex;
+  align-items: center;
+  padding: 4px;
+}
+
+.eye-toggle:hover {
+  color: var(--color-text);
 }
 
 .form-forgot {
@@ -84,23 +155,26 @@
 
 .form-forgot a {
   font-size: var(--font-size-sm);
-  color: var(--color-primary);
-  font-weight: 500;
+  color: var(--color-text-muted);
 }
 
 .form-forgot a:hover {
-  text-decoration: underline;
+  color: var(--color-primary);
 }
 
 .auth-btn {
+  width: 100%;
+  padding: var(--spacing-md);
   background-color: var(--color-primary);
   color: white;
-  padding: var(--spacing-sm) var(--spacing-md);
-  border-radius: var(--radius-md);
+  border-radius: 999px;
   font-size: var(--font-size-md);
   font-weight: 600;
-  margin-top: var(--spacing-xs);
+  font-family: var(--font-base);
+  cursor: pointer;
+  border: none;
   transition: background-color 0.2s;
+  margin-top: var(--spacing-xs);
 }
 
 .auth-btn:hover:not(:disabled) {
@@ -122,8 +196,25 @@
 .auth-switch a {
   color: var(--color-primary);
   font-weight: 600;
+  text-decoration: underline;
 }
 
-.auth-switch a:hover {
-  text-decoration: underline;
+@media (max-width: 768px) {
+  .auth-container {
+    grid-template-columns: 1fr;
+  }
+
+  .auth-left {
+    padding-right: 0;
+    text-align: center;
+  }
+
+  .auth-crown {
+    display: flex;
+    justify-content: center;
+  }
+
+  .auth-benefits li {
+    justify-content: center;
+  }
 }

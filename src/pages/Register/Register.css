@@ -1,51 +1,5 @@
-.register-card {
-  max-width: 560px;
-}
-
-.account-type-selector {
-  display: flex;
-  gap: var(--spacing-sm);
-  margin-bottom: var(--spacing-md);
-  background: var(--color-background);
-  padding: var(--spacing-xs);
-  border-radius: var(--radius-md);
-}
-
-.type-btn {
-  flex: 1;
-  padding: var(--spacing-sm);
-  border-radius: var(--radius-sm);
+.optional-label {
   font-size: var(--font-size-sm);
-  font-weight: 600;
+  font-weight: 400;
   color: var(--color-text-muted);
-  transition: all 0.2s;
-}
-
-.type-btn.active {
-  background: var(--color-surface);
-  color: var(--color-primary);
-  box-shadow: var(--shadow-sm);
-}
-
-.member-notice {
-  background: #f5f3ff;
-  border: 1px solid #ddd6fe;
-  color: var(--color-member);
-  border-radius: var(--radius-md);
-  padding: var(--spacing-sm) var(--spacing-md);
-  font-size: var(--font-size-sm);
-  margin-bottom: var(--spacing-md);
-  line-height: 1.5;
-}
-
-.form-row {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: var(--spacing-md);
-}
-
-@media (max-width: 480px) {
-  .form-row {
-    grid-template-columns: 1fr;
-  }
 }
