@@ -2,49 +2,11 @@ import { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
 import { useAuth } from '../../hooks/useAuth'
 import { getFeaturedProducts, getOrekelwaDeals } from '../../services/products'
+import ProductCard from '../../components/ProductCard/ProductCard'
 import './Home.css'
 
 function formatPrice(price) {
   return `₦${Number(price).toLocaleString()}`
-}
-
-function ProductCard({ product, isMember = false }) {
-  const hasVariants = product.variants && product.variants.length > 0
-  const displayPrice = hasVariants ? product.variants[0].retail_price : product.retail_price
-  const displayWholesale = hasVariants ? product.variants[0].wholesale_price : product.wholesale_price
-  const displayMember = hasVariants ? product.variants[0].member_price : product.member_price
-  const showMemberPrice = product.is_member_product && displayMember
-
-  return (
-    <Link to={`/shop/${product.slug}`} className="product-card">
-      <div className="product-card-image">
-        {product.images && product.images.length > 0
-          ? <img src={product.images[0]} alt={product.name} />
-          : <div className="product-placeholder" />
-        }
-      </div>
-      <div className="product-card-body">
-        {product.categories && (
-          <span className={`product-badge ${product.is_member_product ? 'badge-member' : 'badge-category'}`}>
-            {product.is_member_product ? 'Member' : product.categories.name}
-          </span>
-        )}
-        <p className="product-name">{product.name}</p>
-        <p className="product-price">{formatPrice(displayPrice)}</p>
-        {displayWholesale && displayWholesale < displayPrice && product.min_wholesale_qty && (
-          <p className="product-wholesale">
-            Wholesale Price: {formatPrice(displayWholesale)} • {product.min_wholesale_qty}+ items
-          </p>
-        )}
-        {showMemberPrice && !isMember && (
-          <p className="product-member-nudge">
-            Member Price: {formatPrice(displayMember)} •{' '}
-            <Link to="/login" onClick={e => e.stopPropagation()}>Login to access</Link>
-          </p>
-        )}
-      </div>
-    </Link>
-  )
 }
 
 function Home() {
@@ -82,9 +44,12 @@ function Home() {
 
     {/* Top Left — product card */}
     <div className="hero-card" style={{ top: '20px', left: '0px', width: '150px' }}>
-      <div className="hero-card-img" style={{ background: '#e8ede8', height: '130px' }} />
-      <p className="hero-card-name">Orekelewa Organics...</p>
-      <span className="hero-card-stars">★★★★★ (4K)</span>
+      <div className="hero-card-img" style={{
+    backgroundImage: 'url(https://res.cloudinary.com/db2a43rey/image/upload/v1777816491/1777673684456_avgyk5.png)',
+    backgroundSize: 'cover', backgroundPosition: 'center', height: '130px'
+  }} />
+  <p className="hero-card-name">Orekelewa Organics...</p>
+  <span className="hero-card-stars">★★★★★ (4K)</span>
     </div>
 
     {/* Top Left — Orekelewa brand card overlapping */}
@@ -97,7 +62,10 @@ function Home() {
 
     {/* Bottom Left — antiperspirant card overlapping */}
     <div className="hero-card" style={{ bottom: '-70px', left: '100px', width: '150px' }}>
-      <div className="hero-card-img" style={{ backgroundImage: 'url(/src/assets/hero-bg-dark.jpg)', backgroundSize: 'cover', height: '130px' }} />
+      <div className="hero-card-img" style={{
+    backgroundImage: 'url(https://res.cloudinary.com/db2a43rey/image/upload/v1777816636/1777727879912_oawhae.png)',
+    backgroundSize: 'cover', backgroundPosition: 'center', height: '130px'
+  }} />
       <p className="hero-card-name">Antiperspirant Deodo...</p>
       <span className="hero-card-stars">★★★★★ (4K)</span>
     </div>
@@ -107,7 +75,10 @@ function Home() {
 
     {/* Top Right — bamboo blanket card overlapping */}
     <div className="hero-card" style={{ top: '0px', right: '130px', width: '150px' }}>
-      <div className="hero-card-img" style={{ background: '#d0d8e0', height: '130px' }} />
+      <div className="hero-card-img" style={{
+    backgroundImage: 'url(https://res.cloudinary.com/db2a43rey/image/upload/v1777816644/1777735906323_kzikiy.png)',
+    backgroundSize: 'cover', backgroundPosition: 'center', height: '130px'
+  }} />
       <p className="hero-card-name">Bamboo blanket</p>
       <span className="hero-card-stars">★★★★★ (4K)</span>
     </div>
@@ -119,7 +90,10 @@ function Home() {
 
     {/* Bottom Right — Limacy product card overlapping */}
     <div className="hero-card" style={{ bottom: '10px', right: '20px', width: '150px' }}>
-      <div className="hero-card-img" style={{ background: '#f5e8e0', height: '130px' }} />
+      <div className="hero-card-img" style={{
+    backgroundImage: 'url(https://res.cloudinary.com/db2a43rey/image/upload/v1777816614/1777673684892_bddmn8.png)',
+    backgroundSize: 'cover', backgroundPosition: 'center', height: '110px'
+  }} />
       <p className="hero-card-name">Limacy Milk Body Lot...</p>
       <span className="hero-card-stars">★★★★★ (4K)</span>
     </div>
@@ -165,12 +139,16 @@ function Home() {
             <Link to="/shop" className="view-all-link">View All →</Link>
           </div>
 
-          <div className="products-scroll">
-            {featuredProducts.map(product => (
-              <ProductCard key={product.id} product={product} isMember={isMember} />
-            ))}
-            <button className="scroll-arrow scroll-arrow-right">›</button>
-          </div>
+          <div className="products-scroll-wrapper">
+  <div className="products-scroll" id="featured-scroll">
+    {featuredProducts.map(product => (
+      <ProductCard key={product.id} product={product} isMember={isMember} />
+    ))}
+  </div>
+  <button className="scroll-arrow" onClick={() => {
+    document.getElementById('featured-scroll').scrollBy({ left: 320, behavior: 'smooth' })
+  }}>›</button>
+</div>
         </div>
       </section>
 
@@ -189,11 +167,21 @@ function Home() {
             </Link>
           </div>
           <div className="wholesale-banner-right">
-            <div className="wholesale-img-stack">
-              <div className="wholesale-img wholesale-img-back" />
-              <div className="wholesale-img wholesale-img-front" />
-            </div>
-          </div>
+  <div className="wholesale-img-stack">
+    <div className="wholesale-product-card wholesale-card-1">
+      <img src="https://res.cloudinary.com/db2a43rey/image/upload/v1777816636/1777735906221_i9q18v.jpg" alt="Shea Butter" />
+    </div>
+    <div className="wholesale-product-card wholesale-card-2">
+      <img src="https://res.cloudinary.com/db2a43rey/image/upload/v1777816648/enhanced_product_hv213t.png" alt="Deluxe Shea Butter" />
+    </div>
+    <div className="wholesale-product-card wholesale-card-3">
+      <img src="https://res.cloudinary.com/db2a43rey/image/upload/v1777816491/1777673684456_avgyk5.png" alt="Face Scrub" />
+    </div>
+    <div className="wholesale-product-card wholesale-card-4">
+      <img src="https://res.cloudinary.com/db2a43rey/image/upload/v1777816649/IMG-20260413-WA0016_zszkcs.jpg" alt="Coconut Oil" />
+    </div>
+  </div>
+</div>
         </div>
       </section>
 
@@ -208,24 +196,25 @@ function Home() {
             <Link to="/shop?category=Orekelewa+Products" className="view-all-link">View All →</Link>
           </div>
 
-          <div className="products-scroll">
-            {dealsProducts.map(product => (
-              <ProductCard key={product.id} product={product} isMember={isMember} />
-            ))}
-            <button className="scroll-arrow scroll-arrow-right">›</button>
-          </div>
-        </div>
+  <div className="products-scroll-wrapper">
+  <div className="products-scroll" id="deals-scroll">
+    {dealsProducts.map(product => (
+      <ProductCard key={product.id} product={product} isMember={isMember} />
+    ))}
+  </div>
+  <button className="scroll-arrow" onClick={() => {
+    document.getElementById('deals-scroll').scrollBy({ left: 320, behavior: 'smooth' })
+  }}>›</button>
+</div>
+</div>
       </section>
 
       {/* ── BECOME A MEMBER ── */}
       <section className="become-member-section">
         <div className="become-member-inner">
           <div className="become-member-crown">
-            <svg width="48" height="40" viewBox="0 0 48 40" fill="none">
-              <path d="M4 36L10 12L20 24L24 4L28 24L38 12L44 36H4Z" stroke="#01A451" strokeWidth="2.5" strokeLinejoin="round" fill="none"/>
-              <line x1="4" y1="36" x2="44" y2="36" stroke="#01A451" strokeWidth="2.5" strokeLinecap="round"/>
-            </svg>
-          </div>
+  <img src="/src/assets/crown.png" alt="crown" style={{ width: '52px', height: '44px' }} />
+</div>
           <h2 className="become-member-title">Become a Member</h2>
           <p className="become-member-sub">
             Register with a referral code and unlock exclusive member pricing and special discounts on selected products. All members enjoy special discounts

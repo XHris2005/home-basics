@@ -201,16 +201,47 @@
 .view-all-link:hover { text-decoration: underline; }
 
 /* Products Scroll */
+.products-scroll-wrapper {
+  position: relative;
+}
+
 .products-scroll {
   display: flex;
   gap: var(--spacing-md);
   overflow-x: auto;
   padding-bottom: var(--spacing-sm);
-  position: relative;
   scrollbar-width: none;
 }
-.products-scroll::-webkit-scrollbar { display: none; }
 
+.products-scroll::-webkit-scrollbar {
+  display: none;
+}
+
+.scroll-arrow {
+  position: absolute;
+  right: -18px;
+  top: 40%;
+  transform: translateY(-50%);
+  width: 36px;
+  height: 36px;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: 50%;
+  font-size: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: var(--shadow-sm);
+  cursor: pointer;
+  color: var(--color-text);
+  z-index: 10;
+}
+
+.scroll-arrow:hover {
+  background: var(--color-primary);
+  color: white;
+  border-color: var(--color-primary);
+}
 /* Product Card */
 .product-card {
   flex-shrink: 0;
@@ -298,42 +329,27 @@
   text-decoration: underline;
 }
 
-.scroll-arrow {
-  position: absolute;
-  right: 0;
-  top: 50%;
-  transform: translateY(-50%);
-  width: 36px;
-  height: 36px;
-  background: var(--color-surface);
-  border: 1px solid var(--color-border);
-  border-radius: 50%;
-  font-size: 20px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  box-shadow: var(--shadow-sm);
-  cursor: pointer;
-  color: var(--color-text);
-  z-index: 10;
-}
-.scroll-arrow:hover { background: var(--color-primary); color: white; border-color: var(--color-primary); }
 
 /* ── WHOLESALE BANNER ── */
 .wholesale-banner {
   background: var(--color-primary);
   padding: var(--spacing-2xl) 0;
   margin: var(--spacing-2xl) 0;
+  overflow: hidden;
 }
 
 .wholesale-banner-inner {
   max-width: 1280px;
   margin: 0 auto;
   padding: 0 var(--spacing-xl);
-  display: grid;
-  grid-template-columns: 1fr 1fr;
+  display: flex;
   align-items: center;
   gap: var(--spacing-2xl);
+}
+.wholesale-banner-left{
+  display: flex;
+  flex: 2;
+  flex-direction: column;
 }
 
 .wholesale-banner-title {
@@ -352,7 +368,8 @@
 }
 
 .wholesale-banner-btn {
-  display: inline-block;
+  display: flex;
+  width: fit-content;
   background: white;
   color: var(--color-primary);
   padding: var(--spacing-sm) var(--spacing-xl);
@@ -365,56 +382,59 @@
 
 .wholesale-banner-right {
   display: flex;
-  justify-content: center;
+  justify-content: flex-end;
   align-items: center;
+  overflow: visible;
+  flex: 3;
 }
 
 .wholesale-img-stack {
   position: relative;
-  width: 280px;
-  height: 240px;
+  width: 100%;
+  height: 280px;
+  flex-shrink: 0;
 }
 
-.wholesale-img-back {
-  width: 140px;
-  height: 180px;
-  background: rgba(255,255,255,0.2);
-  bottom: 0;
-  left: 0;
-  border-radius: var(--radius-lg);
-  border: 2px solid rgba(255,255,255,0.3);
-}
-
-.wholesale-img-front {
-  width: 160px;
-  height: 200px;
-  background: rgba(255,255,255,0.3);
-  top: 0;
-  right: 0;
-  border-radius: var(--radius-lg);
-  border: 2px solid rgba(255,255,255,0.4);
-}
-
-.wholesale-img {
+.wholesale-product-card {
   position: absolute;
   border-radius: var(--radius-lg);
-  box-shadow: var(--shadow-md);
-}
-
-.wholesale-img-back {
-  width: 150px;
-  height: 180px;
-  background: rgba(255,255,255,0.15);
-  bottom: 0;
-  left: 20px;
-}
-
-.wholesale-img-front {
-  width: 160px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.25);
+  overflow: hidden;
+  width: 200px;
   height: 200px;
-  background: rgba(255,255,255,0.25);
-  top: 0;
-  right: 0;
+}
+
+.wholesale-product-card img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.wholesale-card-1 {
+  top: 0px;
+  left: 0px;
+  transform: rotate(-10deg);
+  z-index: 2;
+}
+
+.wholesale-card-2 {
+  top: 80px;
+  left: 180px;
+  z-index: 3;
+}
+
+.wholesale-card-3 {
+  top: 10px;
+  left: 350px;
+  transform: rotate(8deg);
+  z-index: 2;
+}
+
+.wholesale-card-4 {
+  top: 100px;
+  left: 520px;
+  transform: rotate(-15deg);
+  z-index: 1;
 }
 
 /* ── BECOME A MEMBER ── */

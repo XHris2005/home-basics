@@ -57,11 +57,8 @@ function Register() {
         {/* Left */}
         <div className="auth-left">
           <div className="auth-crown">
-            <svg width="48" height="40" viewBox="0 0 48 40" fill="none">
-              <path d="M4 36L10 12L20 24L24 4L28 24L38 12L44 36H4Z" stroke="#01A451" strokeWidth="2.5" strokeLinejoin="round" fill="none"/>
-              <line x1="4" y1="36" x2="44" y2="36" stroke="#01A451" strokeWidth="2.5" strokeLinecap="round"/>
-            </svg>
-          </div>
+  <img src="/src/assets/crown.png" alt="crown" style={{ width: '48px', height: '40px' }} />
+</div>
           <h1 className="auth-title">Become a Member</h1>
           <p className="auth-subtitle">Register with a referral code to access member pricing and special discounts.</p>
           <ul className="auth-benefits">

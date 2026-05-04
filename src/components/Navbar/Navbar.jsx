@@ -49,19 +49,19 @@ function Navbar() {
   const [showSearch, setShowSearch] = useState(false)
   const searchRef = useRef(null)
   const categoryRef = useRef(null)
+  const userMenuRef = useRef(null)
 
-  // Mock suggestions — will be replaced with Supabase query later
   const mockProducts = [
     'Orekelewa 50g Classic Shea Butter',
     'Orekelewa 200g Classic Shea Butter',
     'Orekelewa 350g Classic Shea Butter',
-    'Orekelewa 200g Deluxe Shea Butter',
-    'Orekelewa 500g Deluxe Shea Butter',
-    'Orekelewa 500g Classic Shea Butter',
-    'Orekelewa 1200g Deluxe Shea Butter',
-    'Orekelewa Face & Body Scrub',
+    'Orekelewa Face and Body Scrub',
+    'Limancy Aloe Vera Shower Gel',
+    'Limancy Milk Body Wash',
     'Bamboo Night Pad',
-    'Limocy Milk Body Lotion'
+    'Himalayan Powder Salt Toothpaste',
+    'Limancy Milk Nourishing Body Lotion',
+    'Limancy Antiperspirant Deodorant'
   ]
 
   function handleSearchChange(e) {
@@ -121,6 +121,9 @@ function Navbar() {
       if (categoryRef.current && !categoryRef.current.contains(e.target)) {
         setShowCategories(false)
       }
+      if (userMenuRef.current && !userMenuRef.current.contains(e.target)) {
+        setShowUserMenu(false)
+      }
     }
     document.addEventListener('mousedown', handleClick)
     return () => document.removeEventListener('mousedown', handleClick)
@@ -135,23 +138,24 @@ function Navbar() {
           <img src="/src/assets/logo.png" alt="Home Basics" className="logo-img" />
         </Link>
 
-        {/* Categories Dropdown */}
-        <div
-          className="nav-dropdown"
-          ref={categoryRef}
-          onMouseEnter={() => setShowCategories(true)}
-          onMouseLeave={() => setShowCategories(false)}
-        >
-          <button className="nav-link">
+        {/* Categories Dropdown — click based */}
+        <div className="nav-dropdown" ref={categoryRef}>
+          <button
+            className="nav-link"
+            onClick={() => {
+              setShowCategories(!showCategories)
+              setShowUserMenu(false)
+            }}
+          >
             Categories
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"
+              style={{ transform: showCategories ? 'rotate(180deg)' : 'rotate(0)', transition: 'transform 0.2s' }}>
               <polyline points="6 9 12 15 18 9"/>
             </svg>
           </button>
 
           {showCategories && (
             <div className="categories-dropdown">
-              {/* Left Panel */}
               <div className="cat-left">
                 <p className="cat-all-label">All Categories</p>
                 {categoryData.map(cat => (
@@ -172,7 +176,6 @@ function Navbar() {
                 ))}
               </div>
 
-              {/* Right Panel */}
               <div className="cat-right">
                 <p className="cat-right-title">{activeCategory.name}</p>
                 <div className="cat-subcategories">
@@ -185,9 +188,6 @@ function Navbar() {
                       >
                         {sub}
                       </Link>
-                      <span className="cat-sub-item">Body Lotions</span>
-                      <span className="cat-sub-item">Body Lotions</span>
-                      <span className="cat-sub-item">Body Lotions</span>
                     </div>
                   ))}
                 </div>
@@ -235,19 +235,18 @@ function Navbar() {
         {/* Right Icons */}
         <div className="navbar-right">
 
-          {/* User */}
-          <div
-            className="nav-icon-btn"
-            onMouseEnter={() => setShowUserMenu(true)}
-            onMouseLeave={() => setShowUserMenu(false)}
-          >
+          {/* User — click based */}
+          <div className="nav-icon-btn" ref={userMenuRef} onClick={() => {
+            setShowUserMenu(!showUserMenu)
+            setShowCategories(false)
+          }}>
             <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
               <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
               <circle cx="12" cy="7" r="4"/>
             </svg>
 
             {showUserMenu && (
-              <div className="dropdown-menu user-menu">
+              <div className="dropdown-menu user-menu" onClick={e => e.stopPropagation()}>
                 {user ? (
                   <>
                     <div className="user-menu-name">{profile?.full_name || 'My Account'}</div>
@@ -278,6 +277,7 @@ function Navbar() {
             <span className="cart-count">0</span>
           </Link>
         </div>
+
       </div>
     </nav>
   )
