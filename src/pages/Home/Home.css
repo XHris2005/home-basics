@@ -484,8 +484,9 @@
 /* ── TRUST BADGES ── */
 .trust-section {
   padding: var(--spacing-2xl) var(--spacing-xl);
-  background: var(--color-surface);
-  border-top: 1px solid var(--color-border);
+  background: #f0fdf4;
+  border-top: 1px solid #bbf7d0;
+  border-bottom: 1px solid #bbf7d0;
 }
 
 .trust-inner {
@@ -505,12 +506,16 @@
 .trust-icon {
   width: 52px;
   height: 52px;
-  background: #f0fdf4;
+  background: var(--color-primary);
   border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
+}
+
+.trust-icon svg {
+  stroke: white;
 }
 
 .trust-label {
@@ -524,7 +529,6 @@
   font-size: 12px;
   color: var(--color-text-muted);
 }
-
 /* ── FOOTER ── */
 .footer {
   background: var(--color-surface);

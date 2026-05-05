@@ -5,10 +5,6 @@ import { getFeaturedProducts, getOrekelwaDeals } from '../../services/products'
 import ProductCard from '../../components/ProductCard/ProductCard'
 import './Home.css'
 
-function formatPrice(price) {
-  return `₦${Number(price).toLocaleString()}`
-}
-
 function Home() {
   const { isMember } = useAuth()
   const [featuredProducts, setFeaturedProducts] = useState([])
