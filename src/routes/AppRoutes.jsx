@@ -23,7 +23,7 @@ function AppRoutes() {
       {/* Public routes */}
       <Route path="/" element={<Home />} />
       <Route path="/shop" element={<Shop />} />
-      <Route path="/shop/:id" element={<ProductDetail />} />
+      <Route path="/shop/:slug" element={<ProductDetail />} />
       <Route path="/cart" element={<Cart />} />
       <Route path="/login" element={<Login />} />
       <Route path="/register" element={<Register />} />

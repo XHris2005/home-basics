@@ -40,8 +40,8 @@
   --radius-lg: 12px;
 
   /* Shadows */
-  --shadow-sm: 0 1px 3px rgba(0,0,0,0.1);
-  --shadow-md: 0 4px 12px rgba(0,0,0,0.1);
+  --shadow-sm: 0 2px 8px rgba(0,0,0,0.08);
+  --shadow-md: 0 4px 16px rgba(0,0,0,0.12);
 }
 
 body {
@@ -67,4 +67,20 @@ button {
 img {
   max-width: 100%;
   display: block;
+}
+/* Global card shadows */
+.product-card {
+  box-shadow: var(--shadow-sm);
+}
+
+.product-card:hover {
+  box-shadow: var(--shadow-md);
+}
+
+.auth-card {
+  box-shadow: var(--shadow-sm);
+}
+
+.shop-sidebar {
+  box-shadow: var(--shadow-sm);
 }

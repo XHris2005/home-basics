@@ -236,36 +236,46 @@ function Navbar() {
         <div className="navbar-right">
 
           {/* User — click based */}
-          <div className="nav-icon-btn" ref={userMenuRef} onClick={() => {
-            setShowUserMenu(!showUserMenu)
-            setShowCategories(false)
-          }}>
-            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-              <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
-              <circle cx="12" cy="7" r="4"/>
-            </svg>
+          {/* User — click based */}
+<div className="nav-icon-btn" ref={userMenuRef} onClick={() => {
+  setShowUserMenu(!showUserMenu)
+  setShowCategories(false)
+}}>
+  {user ? (
+    <div className="user-avatar">
+      {profile?.full_name
+        ? profile.full_name.charAt(0).toUpperCase()
+        : user.email.charAt(0).toUpperCase()
+      }
+    </div>
+  ) : (
+    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+      <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+      <circle cx="12" cy="7" r="4"/>
+    </svg>
+  )}
 
-            {showUserMenu && (
-              <div className="dropdown-menu user-menu" onClick={e => e.stopPropagation()}>
-                {user ? (
-                  <>
-                    <div className="user-menu-name">{profile?.full_name || 'My Account'}</div>
-                    <Link to="/account" className="dropdown-item" onClick={() => setShowUserMenu(false)}>My Account</Link>
-                    <Link to="/account?tab=orders" className="dropdown-item" onClick={() => setShowUserMenu(false)}>My Orders</Link>
-                    {profile?.role === 'admin' && (
-                      <Link to="/admin" className="dropdown-item" onClick={() => setShowUserMenu(false)}>Admin Dashboard</Link>
-                    )}
-                    <button className="dropdown-item logout-btn" onClick={handleLogout}>Sign Out</button>
-                  </>
-                ) : (
-                  <>
-                    <Link to="/login" className="dropdown-item" onClick={() => setShowUserMenu(false)}>Sign In</Link>
-                    <Link to="/register" className="dropdown-item" onClick={() => setShowUserMenu(false)}>Create Account</Link>
-                  </>
-                )}
-              </div>
-            )}
-          </div>
+  {showUserMenu && (
+    <div className="dropdown-menu user-menu" onClick={e => e.stopPropagation()}>
+      {user ? (
+        <>
+          <div className="user-menu-name">{profile?.full_name || 'My Account'}</div>
+          <Link to="/account" className="dropdown-item" onClick={() => setShowUserMenu(false)}>My Account</Link>
+          <Link to="/account?tab=orders" className="dropdown-item" onClick={() => setShowUserMenu(false)}>My Orders</Link>
+          {profile?.role === 'admin' && (
+            <Link to="/admin" className="dropdown-item" onClick={() => setShowUserMenu(false)}>Admin Dashboard</Link>
+          )}
+          <button className="dropdown-item logout-btn" onClick={handleLogout}>Sign Out</button>
+        </>
+      ) : (
+        <>
+          <Link to="/login" className="dropdown-item" onClick={() => setShowUserMenu(false)}>Sign In</Link>
+          <Link to="/register" className="dropdown-item" onClick={() => setShowUserMenu(false)}>Create Account</Link>
+        </>
+      )}
+    </div>
+  )}
+</div>
 
           {/* Cart */}
           <Link to="/cart" className="nav-icon-btn cart-btn">
