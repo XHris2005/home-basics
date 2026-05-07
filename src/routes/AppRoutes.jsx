@@ -15,6 +15,7 @@ import Orders from '../pages/admin/Orders/Orders'
 import Members from '../pages/admin/Members/Members'
 import Users from '../pages/admin/Users/Users'
 import ProtectedRoute from '../components/ProtectedRoute/ProtectedRoute'
+import ForgotPassword from '../pages/ForgotPassword/ForgotPassword'
 
 function AppRoutes() {
   return (
@@ -22,11 +23,12 @@ function AppRoutes() {
       {/* Public routes */}
       <Route path="/" element={<Home />} />
       <Route path="/shop" element={<Shop />} />
-      <Route path="/shop/:id" element={<ProductDetail />} />
+      <Route path="/shop/:slug" element={<ProductDetail />} />
       <Route path="/cart" element={<Cart />} />
       <Route path="/login" element={<Login />} />
       <Route path="/register" element={<Register />} />
       <Route path="/become-member" element={<BecomeMember />} />
+      <Route path="/forgot-password" element={<ForgotPassword />} />
 
       {/* Protected - logged in users */}
       <Route element={<ProtectedRoute />}>
