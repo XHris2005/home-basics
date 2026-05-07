@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { useAuth } from '../../hooks/useAuth'
+import crown from "../../assets/crown.png";
 import './Login.css'
 
 function Login() {
@@ -35,7 +36,7 @@ function Login() {
         {/* Left */}
         <div className="auth-left">
           <div className="auth-crown">
-  <img src="/src/assets/crown.png" alt="crown" style={{ width: '48px', height: '40px' }} />
+  <img src={crown} alt="crown" style={{ width: '48px', height: '40px' }} />
 </div>
           <h1 className="auth-title">Welcome Back</h1>
           <p className="auth-subtitle">Sign in to continue shopping and enjoy your benefits</p>

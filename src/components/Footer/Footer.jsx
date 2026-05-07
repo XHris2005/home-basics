@@ -1,4 +1,5 @@
 import { Link } from 'react-router-dom'
+import logo from "../../assets/logo.png";
 import './Footer.css'
 
 function Footer() {
@@ -64,7 +65,7 @@ function Footer() {
         <div className="footer-inner">
           <div className="footer-brand">
             <div className="footer-logo">
-              <img src="/src/assets/logo.png" alt="Homebasics" className="footer-logo-img" />
+              <img src={logo} alt="Homebasics" className="footer-logo-img" />
               <span className="footer-logo-text">Homebasics</span>
             </div>
             <p className="footer-brand-desc">

@@ -1,6 +1,7 @@
 import { useState, useRef, useEffect } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { useAuth } from '../../hooks/useAuth'
+import logo from "../../assets/logo.png";
 import { useCart } from '../../hooks/useCart'
 import './Navbar.css'
 
@@ -137,7 +138,7 @@ function Navbar() {
 
         {/* Logo */}
         <Link to="/" className="navbar-logo">
-          <img src="/src/assets/logo.png" alt="Home Basics" className="logo-img" />
+          <img src={logo} alt="Home Basics" className="logo-img" />
         </Link>
 
         {/* Categories Dropdown — click based */}

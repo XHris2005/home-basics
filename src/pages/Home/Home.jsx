@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom'
 import { useAuth } from '../../hooks/useAuth'
 import { getFeaturedProducts, getOrekelwaDeals } from '../../services/products'
 import ProductCard from '../../components/ProductCard/ProductCard'
+import crown from "../../assets/crown.png";
 import './Home.css'
 
 function Home() {
@@ -209,7 +210,7 @@ function Home() {
       <section className="become-member-section">
         <div className="become-member-inner">
           <div className="become-member-crown">
-  <img src="/src/assets/crown.png" alt="crown" style={{ width: '52px', height: '44px' }} />
+  <img src={crown} alt="crown" style={{ width: '52px', height: '44px' }} />
 </div>
           <h2 className="become-member-title">Become a Member</h2>
           <p className="become-member-sub">

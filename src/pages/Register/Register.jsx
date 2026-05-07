@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { useAuth } from '../../hooks/useAuth'
+import crown from "../../assets/crown.png";
 import './Register.css'
 
 function Register() {
@@ -57,7 +58,7 @@ function Register() {
         {/* Left */}
         <div className="auth-left">
           <div className="auth-crown">
-  <img src="/src/assets/crown.png" alt="crown" style={{ width: '48px', height: '40px' }} />
+  <img src={crown} alt="crown" style={{ width: '48px', height: '40px' }} />
 </div>
           <h1 className="auth-title">Become a Member</h1>
           <p className="auth-subtitle">Register with a referral code to access member pricing and special discounts.</p>
