@@ -1,0 +1,200 @@
+.modal-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.45);
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+  animation: backdropIn 0.15s ease;
+}
+@keyframes backdropIn { from { opacity: 0; } to { opacity: 1; } }
+.anm-modal {
+  background: #fff;
+  border-radius: 16px;
+  width: 100%;
+  max-width: 540px;
+  max-height: 90vh;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.15);
+  animation: modalIn 0.2s ease;
+}
+
+@keyframes modalIn {
+  from { transform: translateY(10px); opacity: 0; }
+  to   { transform: translateY(0);    opacity: 1; }
+}
+
+.anm-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 22px 24px 16px;
+  border-bottom: 1px solid #f0f0f0;
+}
+.anm-header h2 {
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: #111;
+  margin: 0;
+}
+
+.anm-body {
+  padding: 20px 24px;
+  overflow-y: auto;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.anm-row-2 {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+.anm-field {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.anm-field input {
+  height: 48px;
+  padding: 0 16px;
+  border: 1.5px solid #e0e0e0;
+  border-radius: 10px;
+  font-size: 0.9rem;
+  color: #111;
+  font-family: inherit;
+  outline: none;
+  transition: border-color 0.15s;
+  width: 100%;
+  box-sizing: border-box;
+}
+.anm-field input:focus { border-color: #01A451; }
+.anm-field input::placeholder { color: #aaa; }
+.anm-field.field-err input { border-color: #e53935; }
+
+.err-msg {
+  font-size: 0.76rem;
+  color: #e53935;
+}
+
+/* Custom Select */
+.cs-wrap { position: relative; }
+.cs-disabled .cs-trigger { opacity: 0.55; cursor: not-allowed; background: #f9f9f9; }
+
+.cs-trigger {
+  width: 100%;
+  height: 48px;
+  padding: 0 14px 0 16px;
+  border: 1.5px solid #e0e0e0;
+  border-radius: 10px;
+  background: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  cursor: pointer;
+  font-size: 0.9rem;
+  color: #111;
+  font-family: inherit;
+  transition: border-color 0.15s;
+}
+.cs-trigger.cs-open { border-color: #01A451; border-bottom-left-radius: 0; border-bottom-right-radius: 0; }
+.cs-trigger:hover:not(:disabled) { border-color: #bbb; }
+.cs-placeholder { color: #aaa; }
+
+.cs-chevron { color: #888; transition: transform 0.2s; flex-shrink: 0; }
+.cs-chevron.up { transform: rotate(180deg); }
+
+.cs-dropdown {
+  position: absolute;
+  top: 100%; left: 0; right: 0;
+  z-index: 200;
+  background: #fff;
+  border: 1.5px solid #01A451;
+  border-top: none;
+  border-bottom-left-radius: 10px;
+  border-bottom-right-radius: 10px;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.1);
+}
+.cs-scroll { max-height: 210px; overflow-y: auto; }
+
+.cs-option {
+  padding: 10px 16px;
+  font-size: 0.88rem;
+  color: #333;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  transition: background 0.1s;
+}
+.cs-option:hover  { background: #f7fdf9; }
+.cs-option.cs-active { background: #f0faf5; color: #01A451; font-weight: 600; }
+
+.cs-empty {
+  padding: 14px 16px;
+  font-size: 0.85rem;
+  color: #aaa;
+  text-align: center;
+}
+
+.anm-default-check {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  font-size: 0.88rem;
+  color: #555;
+  cursor: pointer;
+}
+.anm-default-check input[type="checkbox"] {
+  width: 16px; height: 16px;
+  accent-color: #01A451;
+  cursor: pointer;
+}
+
+.anm-footer {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 12px;
+  padding: 16px 24px 22px;
+  border-top: 1px solid #f0f0f0;
+}
+
+.anm-btn-cancel {
+  height: 44px;
+  padding: 0 22px;
+  border: 1.5px solid #e0e0e0;
+  border-radius: 100px;
+  background: #fff;
+  color: #555;
+  font-size: 0.88rem;
+  font-weight: 500;
+  cursor: pointer;
+  font-family: inherit;
+  transition: background 0.15s;
+}
+.anm-btn-cancel:hover { background: #f5f5f5; }
+
+.anm-btn-save {
+  height: 44px;
+  padding: 0 28px;
+  border: none;
+  border-radius: 100px;
+  background: #01A451;
+  color: #fff;
+  font-size: 0.88rem;
+  font-weight: 600;
+  cursor: pointer;
+  font-family: inherit;
+  transition: background 0.15s, opacity 0.15s;
+}
+.anm-btn-save:hover { background: #019447; }
+.anm-btn-save:disabled { opacity: 0.6; cursor: not-allowed; }

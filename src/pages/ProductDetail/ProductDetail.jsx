@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react'
 import { Link, useParams } from 'react-router-dom'
 import { useAuth } from '../../hooks/useAuth'
 import { getProductBySlug } from '../../services/products'
+import { useCart } from '../../context/CartContext'
 import './ProductDetail.css'
 
 function formatPrice(price) {
@@ -11,6 +12,7 @@ function formatPrice(price) {
 function ProductDetail() {
   const { slug } = useParams()
   const { user, isMember } = useAuth()
+  const { addItem } = useCart()
   const [product, setProduct] = useState(null)
   const [loading, setLoading] = useState(true)
   const [selectedImage, setSelectedImage] = useState(0)
@@ -190,7 +192,12 @@ function ProductDetail() {
           <span className="pd-qty-value">{quantity}</span>
           <button className="pd-qty-btn" onClick={() => setQuantity(q => q + 1)}>+</button>
         </div>
-        <button className="pd-add-cart-btn">🛒 Add to Cart</button>
+        <button
+  className="pd-add-cart-btn"
+  onClick={() => addItem(product, quantity, selectedVariant)}
+>
+  🛒 Add to Cart
+</button>
       </div>
     </div>
   </div>

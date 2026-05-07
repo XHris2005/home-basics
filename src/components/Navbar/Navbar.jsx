@@ -1,6 +1,7 @@
 import { useState, useRef, useEffect } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { useAuth } from '../../hooks/useAuth'
+import { useCart } from '../../hooks/useCart'
 import './Navbar.css'
 
 const categoryData = [
@@ -40,6 +41,7 @@ const categoryData = [
 
 function Navbar() {
   const { user, profile, logout } = useAuth()
+  const { totalItems } = useCart()
   const navigate = useNavigate()
   const [searchQuery, setSearchQuery] = useState('')
   const [searchSuggestions, setSearchSuggestions] = useState([])
@@ -284,7 +286,7 @@ function Navbar() {
               <line x1="3" y1="6" x2="21" y2="6"/>
               <path d="M16 10a4 4 0 0 1-8 0"/>
             </svg>
-            <span className="cart-count">0</span>
+            <span className="cart-count">{totalItems > 0 ? totalItems : 0}</span>
           </Link>
         </div>
 
