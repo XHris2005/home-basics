@@ -1,3 +1,4 @@
-git add netlify.toml
-git commit -m "fix: netlify routing"
-git push origin dev
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
