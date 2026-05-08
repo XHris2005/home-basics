@@ -2,15 +2,9 @@ import { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { useCart } from '../../hooks/useCart'
 import { useAuth } from '../../hooks/useAuth'
+import AddressBookModal from '../../components/AddressBookModal/AddressBookModal'
+import { createOrder } from '../../services/orders'
 import './Checkout.css'
-
-const NIGERIAN_STATES = [
-  'Abia', 'Adamawa', 'Akwa Ibom', 'Anambra', 'Bauchi', 'Bayelsa', 'Benue',
-  'Borno', 'Cross River', 'Delta', 'Ebonyi', 'Edo', 'Ekiti', 'Enugu', 'FCT',
-  'Gombe', 'Imo', 'Jigawa', 'Kaduna', 'Kano', 'Katsina', 'Kebbi', 'Kogi',
-  'Kwara', 'Lagos', 'Nasarawa', 'Niger', 'Ogun', 'Ondo', 'Osun', 'Oyo',
-  'Plateau', 'Rivers', 'Sokoto', 'Taraba', 'Yobe', 'Zamfara'
-]
 
 function formatPrice(price) {
   return `₦${Number(price).toLocaleString()}`
@@ -22,14 +16,9 @@ function Checkout() {
   const navigate = useNavigate()
 
   const [deliveryMethod, setDeliveryMethod] = useState('delivery')
-  const [showAddressModal, setShowAddressModal] = useState(false)
+  const [showAddressBook, setShowAddressBook] = useState(false)
   const [selectedAddress, setSelectedAddress] = useState(null)
   const [loading, setLoading] = useState(false)
-
-  const [addressForm, setAddressForm] = useState({
-    firstName: '', lastName: '', state: '', city: '',
-    area: '', address: '', phone: ''
-  })
 
   const PICKUP_FEE = 500
   const deliveryFee = deliveryMethod === 'pickup'
@@ -37,31 +26,73 @@ function Checkout() {
     : selectedAddress ? 1000 : 0
 
   const total = subtotal + deliveryFee
-
-  function handleAddressChange(e) {
-    setAddressForm({ ...addressForm, [e.target.name]: e.target.value })
-  }
-
-  function handleAddAddress(e) {
-    e.preventDefault()
-    setSelectedAddress(addressForm)
-    setShowAddressModal(false)
-  }
+  const canPlaceOrder = deliveryMethod === 'pickup' || selectedAddress
 
   async function handlePlaceOrder() {
-    if (deliveryMethod === 'delivery' && !selectedAddress) return
-    setLoading(true)
-
-    // Paystack integration will go here
-    // For now just navigate to success
-    setTimeout(() => {
-      clearCart()
-      navigate('/order-confirmation')
-      setLoading(false)
-    }, 1000)
+  if (deliveryMethod === 'delivery' && !selectedAddress) {
+    setShowAddressBook(true)
+    return
   }
 
-  const canPlaceOrder = deliveryMethod === 'pickup' || selectedAddress
+  if (typeof window.PaystackPop === 'undefined') {
+    alert('Payment system not loaded. Please refresh and try again.')
+    return
+  }
+
+  setLoading(true)
+
+  const orderItems = items.map(item => ({
+    product_id: item.product.id,
+    name: item.product.name,
+    image: item.product.images?.[0] || null,
+    variant: item.selectedVariant?.size || null,
+    quantity: item.quantity,
+    price: getItemPrice(item),
+  }))
+
+  function onPaymentSuccess(response) {
+    createOrder({
+      user_id: user.id,
+      items: orderItems,
+      subtotal,
+      shipping_fee: deliveryFee,
+      total_amount: total,
+      payment_ref: response.reference,
+      payment_status: 'paid',
+      delivery_method: deliveryMethod,
+      delivery_address: deliveryMethod === 'delivery' ? selectedAddress : null,
+      status: 'pending',
+    })
+      .then(() => {
+        clearCart()
+        navigate('/order-success', { state: { ref: response.reference, total } })
+      })
+      .catch((err) => {
+        console.error('Order save failed:', err)
+        clearCart()
+        navigate('/order-success', { state: { ref: response.reference, total } })
+      })
+      .finally(() => {
+        setLoading(false)
+      })
+  }
+
+  function onPaymentClose() {
+    setLoading(false)
+  }
+
+  const handler = window.PaystackPop.setup({
+    key: import.meta.env.VITE_PAYSTACK_PUBLIC_KEY,
+    email: user.email,
+    amount: total * 100,
+    currency: 'NGN',
+    ref: `HB-${Date.now()}`,
+    callback: onPaymentSuccess,
+    onClose: onPaymentClose,
+  })
+
+  handler.openIframe()
+}
 
   return (
     <div className="checkout-page">
@@ -93,6 +124,14 @@ function Checkout() {
                   </svg>
                 </div>
                 <h2 className="checkout-card-title">Delivery Method</h2>
+                {deliveryMethod === 'delivery' && selectedAddress && (
+                  <button
+                    className="checkout-change-btn"
+                    onClick={() => setShowAddressBook(true)}
+                  >
+                    Change Address
+                  </button>
+                )}
               </div>
 
               <div className="checkout-tabs">
@@ -114,29 +153,24 @@ function Checkout() {
                 <div className="checkout-delivery-body">
                   {!selectedAddress ? (
                     <>
-                      <p className="checkout-no-address">You have not selected a shipping address</p>
+                      <p className="checkout-no-address">No delivery address selected</p>
                       <button
                         className="checkout-add-address-btn"
-                        onClick={() => setShowAddressModal(true)}
+                        onClick={() => setShowAddressBook(true)}
                       >
-                        Add New Address
+                        + Add Delivery Address
                       </button>
                     </>
                   ) : (
                     <div className="checkout-selected-address">
                       <p className="checkout-address-name">
-                        {selectedAddress.firstName} {selectedAddress.lastName}
+                        {selectedAddress.first_name} {selectedAddress.last_name}
                       </p>
                       <p className="checkout-address-details">
-                        {selectedAddress.address}, {selectedAddress.area}, {selectedAddress.city}, {selectedAddress.state}
+                        {[selectedAddress.address, selectedAddress.area, selectedAddress.city, selectedAddress.state]
+                          .filter(Boolean).join(', ')}
                       </p>
                       <p className="checkout-address-phone">{selectedAddress.phone}</p>
-                      <button
-                        className="checkout-change-btn"
-                        onClick={() => setShowAddressModal(true)}
-                      >
-                        Change Address
-                      </button>
                     </div>
                   )}
                 </div>
@@ -202,7 +236,7 @@ function Checkout() {
                 <span>{deliveryMethod === 'pickup' ? 'Pickup Fee:' : 'Shipping:'}</span>
                 {canPlaceOrder
                   ? <span>{formatPrice(deliveryFee)}</span>
-                  : <span className="checkout-warning">Please select a delivery address</span>
+                  : <span className="checkout-warning">Select a delivery address</span>
                 }
               </div>
 
@@ -218,86 +252,24 @@ function Checkout() {
               >
                 {loading ? 'Processing...' : 'Place Order'}
               </button>
+
+              {!canPlaceOrder && (
+                <p className="checkout-addr-warn">
+                  Please add a delivery address to continue
+                </p>
+              )}
             </div>
           </div>
 
         </div>
       </div>
 
-      {/* Add Address Modal */}
-      {showAddressModal && (
-        <div className="modal-overlay" onClick={() => setShowAddressModal(false)}>
-          <div className="modal-card" onClick={e => e.stopPropagation()}>
-            <div className="modal-header">
-              <h2 className="modal-title">Add New Address</h2>
-              <button className="modal-close" onClick={() => setShowAddressModal(false)}>
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                  <circle cx="12" cy="12" r="10"/>
-                  <line x1="15" y1="9" x2="9" y2="15"/>
-                  <line x1="9" y1="9" x2="15" y2="15"/>
-                </svg>
-              </button>
-            </div>
-
-            <form onSubmit={handleAddAddress} className="modal-form">
-              <div className="modal-row">
-                <input
-                  name="firstName"
-                  value={addressForm.firstName}
-                  onChange={handleAddressChange}
-                  placeholder="First name"
-                  required
-                />
-                <input
-                  name="lastName"
-                  value={addressForm.lastName}
-                  onChange={handleAddressChange}
-                  placeholder="Last name"
-                  required
-                />
-              </div>
-
-              <select name="state" value={addressForm.state} onChange={handleAddressChange} required>
-                <option value="">Select State</option>
-                {NIGERIAN_STATES.map(s => <option key={s} value={s}>{s}</option>)}
-              </select>
-
-              <input
-                name="city"
-                value={addressForm.city}
-                onChange={handleAddressChange}
-                placeholder="Select City"
-                required
-              />
-
-              <input
-                name="area"
-                value={addressForm.area}
-                onChange={handleAddressChange}
-                placeholder="Select Area"
-                required
-              />
-
-              <input
-                name="address"
-                value={addressForm.address}
-                onChange={handleAddressChange}
-                placeholder="Enter Address"
-                required
-              />
-
-              <input
-                name="phone"
-                value={addressForm.phone}
-                onChange={handleAddressChange}
-                placeholder="Phone e.g 090123456789"
-                required
-              />
-
-              <button type="submit" className="modal-submit-btn">Add Address</button>
-            </form>
-          </div>
-        </div>
+      {/* Address Book Modal */}
+      {showAddressBook && (
+        <AddressBookModal
+          onClose={() => setShowAddressBook(false)}
+          onConfirm={(addr) => setSelectedAddress(addr)}
+        />
       )}
 
     </div>

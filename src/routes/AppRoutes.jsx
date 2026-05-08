@@ -7,7 +7,6 @@ import Account from '../pages/Account/Account'
 import Cart from '../pages/Cart/Cart'
 import Checkout from '../pages/Checkout/Checkout'
 import ProductDetail from '../pages/ProductDetail/ProductDetail'
-import OrderConfirmation from '../pages/OrderConfirmation/OrderConfirmation'
 import BecomeMember from '../pages/BecomeMember/BecomeMember'
 import Dashboard from '../pages/admin/Dashboard/Dashboard'
 import Products from '../pages/admin/Products/Products'
@@ -16,6 +15,7 @@ import Members from '../pages/admin/Members/Members'
 import Users from '../pages/admin/Users/Users'
 import ProtectedRoute from '../components/ProtectedRoute/ProtectedRoute'
 import ForgotPassword from '../pages/ForgotPassword/ForgotPassword'
+import OrderSuccess from '../pages/OrderSuccess/OrderSuccess'
 
 function AppRoutes() {
   return (
@@ -33,8 +33,8 @@ function AppRoutes() {
       {/* Protected - logged in users */}
       <Route element={<ProtectedRoute />}>
         <Route path="/checkout" element={<Checkout />} />
-        <Route path="/order-confirmation" element={<OrderConfirmation />} />
         <Route path="/account" element={<Account />} />
+        <Route path="/order-success" element={<OrderSuccess />} />
       </Route>
 
       {/* Protected - admin only */}
