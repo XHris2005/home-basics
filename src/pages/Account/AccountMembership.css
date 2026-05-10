@@ -1,0 +1,239 @@
+.account-membership {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.account-membership__title {
+  font-size: 24px;
+  font-weight: 700;
+  color: #1a1a1a;
+  margin: 0 0 4px;
+}
+
+.account-membership__sub {
+  font-size: 14px;
+  color: #888;
+  margin: 0;
+}
+
+/* Status Cards */
+.account-membership__card {
+  background: #fff;
+  border: 1px solid #e8e8e8;
+  border-radius: 16px;
+  padding: 28px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.account-membership__card--active {
+  border-color: #01A451;
+  background: #f6fdf9;
+}
+
+.account-membership__card--pending {
+  border-color: #f9a825;
+  background: #fffdf0;
+}
+
+.account-membership__badge {
+  display: inline-flex;
+  align-self: flex-start;
+  font-size: 12px;
+  font-weight: 600;
+  padding: 3px 12px;
+  border-radius: 100px;
+}
+
+.account-membership__badge--active {
+  background: #e8f7ef;
+  color: #01A451;
+}
+
+.account-membership__badge--pending {
+  background: #fff8e1;
+  color: #f9a825;
+}
+
+.account-membership__card-title {
+  font-size: 20px;
+  font-weight: 700;
+  color: #1a1a1a;
+  margin: 0;
+}
+
+.account-membership__card-text {
+  font-size: 14px;
+  color: #555;
+  margin: 0;
+}
+
+.account-membership__code-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: #fff;
+  border: 1px solid #e8e8e8;
+  border-radius: 10px;
+  padding: 12px 16px;
+  margin-top: 8px;
+}
+
+.account-membership__code-label {
+  font-size: 12px;
+  color: #888;
+  flex-shrink: 0;
+}
+
+.account-membership__code-value {
+  font-size: 14px;
+  font-weight: 700;
+  color: #1a1a1a;
+  letter-spacing: 1px;
+}
+
+/* Benefits */
+.account-membership__benefits {
+  background: #fff;
+  border: 1px solid #e8e8e8;
+  border-radius: 16px;
+  padding: 24px;
+}
+
+.account-membership__benefits-title {
+  font-size: 16px;
+  font-weight: 700;
+  color: #1a1a1a;
+  margin: 0 0 16px;
+}
+
+.account-membership__benefits-list {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.account-membership__benefit {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+}
+
+.account-membership__benefit-icon {
+  font-size: 22px;
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+.account-membership__benefit-title {
+  font-size: 14px;
+  font-weight: 600;
+  color: #1a1a1a;
+  margin: 0 0 2px;
+}
+
+.account-membership__benefit-text {
+  font-size: 13px;
+  color: #666;
+  margin: 0;
+}
+
+/* Form Card */
+.account-membership__form-card {
+  background: #fff;
+  border: 1px solid #e8e8e8;
+  border-radius: 16px;
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.account-membership__form-title {
+  font-size: 16px;
+  font-weight: 700;
+  color: #1a1a1a;
+  margin: 0;
+}
+
+.account-membership__form-text {
+  font-size: 13px;
+  color: #666;
+  margin: 0;
+  line-height: 1.6;
+}
+
+.account-membership__success {
+  background: #e8f7ef;
+  color: #01A451;
+  border-radius: 10px;
+  padding: 12px 16px;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.account-membership__form {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.account-membership__field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.account-membership__label {
+  font-size: 13px;
+  font-weight: 500;
+  color: #444;
+}
+
+.account-membership__input {
+  padding: 12px 16px;
+  border: 1px solid #e8e8e8;
+  border-radius: 10px;
+  font-size: 15px;
+  color: #1a1a1a;
+  outline: none;
+  transition: border 0.15s;
+  font-family: inherit;
+  letter-spacing: 1px;
+  font-weight: 600;
+}
+
+.account-membership__input:focus {
+  border-color: #01A451;
+}
+
+.account-membership__error {
+  font-size: 13px;
+  color: #e53935;
+  margin: 0;
+}
+
+.account-membership__btn {
+  padding: 12px 32px;
+  background: #01A451;
+  color: #fff;
+  border: none;
+  border-radius: 100px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.15s;
+  align-self: flex-start;
+  font-family: inherit;
+}
+
+.account-membership__btn:hover {
+  background: #018a44;
+}
+
+.account-membership__btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}

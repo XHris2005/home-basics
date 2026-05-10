@@ -1,11 +1,15 @@
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
+import { useAuth } from '../../hooks/useAuth'
 import './ProductCard.css'
 
 function formatPrice(price) {
   return `₦${Number(price).toLocaleString()}`
 }
 
-function ProductCard({ product, isMember = false }) {
+function ProductCard({ product }) {
+  const { user, isMember } = useAuth()
+  const navigate = useNavigate()
+
   const hasVariants = product.variants && product.variants.length > 0
   const displayPrice = hasVariants ? product.variants[0].retail_price : product.retail_price
   const displayWholesale = hasVariants ? product.variants[0].wholesale_price : product.wholesale_price
@@ -33,10 +37,30 @@ function ProductCard({ product, isMember = false }) {
             Wholesale Price: {formatPrice(displayWholesale)} • {product.min_wholesale_qty}+ items
           </p>
         )}
-        {showMemberPrice && !isMember && (
+        {showMemberPrice && (
           <p className="product-member-nudge">
             Member Price: {formatPrice(displayMember)} •{' '}
-            <Link to="/login" onClick={e => e.stopPropagation()}>Login to access</Link>
+            {!user ? (
+              <button
+                className="product-member-btn"
+                onClick={e => {
+                  e.preventDefault()
+                  navigate('/login')
+                }}
+              >
+                Login to access
+              </button>
+            ) : !isMember ? (
+              <button
+                className="product-member-btn"
+                onClick={e => {
+                  e.preventDefault()
+                  navigate('/account/membership')
+                }}
+              >
+                Become a member
+              </button>
+            ) : null}
           </p>
         )}
       </div>
