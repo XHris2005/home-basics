@@ -9,6 +9,11 @@ const noFooterRoutes = ['/login', '/register', '/forgot-password']
 function Layout() {
   const location = useLocation()
   const hideFooter = noFooterRoutes.includes(location.pathname)
+  const isAdmin = location.pathname.startsWith('/admin')
+
+  if (isAdmin) {
+    return <AppRoutes />
+  }
 
   return (
     <>

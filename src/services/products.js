@@ -64,8 +64,25 @@ export async function getAllProducts(filters = {}) {
     .select('*, categories(name, slug)')
     .eq('is_active', true)
 
-  if (filters.search) query = query.ilike('name', `%${filters.search}%`)
-  if (filters.category) query = query.eq('categories.slug', filters.category)
+  if (filters.search) {
+    query = query.ilike('name', `%${filters.search}%`)
+  }
+
+ if (filters.category) {
+  const { data: catData } = await supabase
+    .from('categories')
+    .select('id')
+    .eq('name', filters.category)
+    .maybeSingle()
+
+  if (catData?.id) {
+    query = query.eq('category_id', catData.id)
+  } else {
+    // No matching category found — return empty rather than all products
+    return []
+  }
+}
+
   if (filters.minPrice) query = query.gte('retail_price', filters.minPrice)
   if (filters.maxPrice) query = query.lte('retail_price', filters.maxPrice)
 
