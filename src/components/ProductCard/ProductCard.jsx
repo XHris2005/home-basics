@@ -30,11 +30,17 @@ function ProductCard({ product, isMember = false }) {
         }
       </div>
       <div className="product-card-body">
-        {product.categories && (
-          <span className={`product-badge ${product.is_member_product ? 'badge-member' : 'badge-category'}`}>
-            {product.is_member_product ? 'Member' : product.categories.name}
-          </span>
-        )}
+        {(product.is_member_product || product.categories) && (
+  <span className={`product-badge ${
+    product.is_member_product ? 'badge-member' :
+    product.name?.toLowerCase().startsWith('orekelewa') ? 'badge-orekelewa' :
+    'badge-category'
+  }`}>
+    {product.is_member_product ? 'Member' :
+     product.name?.toLowerCase().startsWith('orekelewa') ? 'Orekelewa' :
+     product.categories?.name}
+  </span>
+)}
         <p className="product-name">{product.name}</p>
         <p className="product-price">{formatPrice(displayPrice)}</p>
         {displayWholesale && displayWholesale < displayPrice && product.min_wholesale_qty && (
@@ -50,13 +56,16 @@ function ProductCard({ product, isMember = false }) {
         Login to access
       </button>
     ) : !isMember ? (
-      <Link
-        to="/become-member"
-        className="product-login-btn"
-        onClick={e => e.stopPropagation()}
-      >
-        Become a member
-      </Link>
+  <button
+    className="product-login-btn"
+    onClick={(e) => {
+      e.preventDefault()
+      e.stopPropagation()
+      navigate('/become-member')
+    }}
+  >
+    Become a member
+  </button>
     ) : null}
   </p>
 )}
