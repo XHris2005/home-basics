@@ -20,6 +20,7 @@ import Customers from '../pages/admin/Customers/Customers'
 import Delivery from '../pages/admin/Delivery/Delivery'
 import Analytics from '../pages/admin/Analytics/Analytics'
 import Settings from '../pages/admin/Settings/Settings'
+import AuthCallback from '../pages/AuthCallback/AuthCallback'
 
 function AppRoutes() {
   return (
@@ -33,6 +34,7 @@ function AppRoutes() {
       <Route path="/register" element={<Register />} />
       <Route path="/become-member" element={<BecomeMember />} />
       <Route path="/forgot-password" element={<ForgotPassword />} />
+      <Route path="/auth/callback" element={<AuthCallback />} />
 
       {/* Protected - logged in users */}
       <Route element={<ProtectedRoute />}>

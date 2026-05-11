@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { useAuth } from '../../hooks/useAuth'
 import crown from "../../assets/crown.png";
+import { supabase } from '../../services/supabase'
 import './Login.css'
 
 function Login() {
@@ -17,17 +18,32 @@ function Login() {
   }
 
   async function handleSubmit(e) {
-    e.preventDefault()
-    setError('')
-    setLoading(true)
-    const { error } = await login(formData)
-    if (error) {
-      setError(error.message)
-      setLoading(false)
-      return
-    }
+  e.preventDefault()
+  setError('')
+  setLoading(true)
+
+  const { error, data } = await login(formData)
+  if (error) {
+    setError(error.message)
+    setLoading(false)
+    return
+  }
+
+  // Fetch role from profiles table
+  const { data: profile } = await supabase
+    .from('profiles')
+    .select('role')
+    .eq('id', data.user.id)
+    .single()
+
+  setLoading(false)
+
+  if (profile?.role === 'admin') {
+    navigate('/admin')
+  } else {
     navigate('/')
   }
+}
 
   async function handleGoogleSignIn() {
   try {
