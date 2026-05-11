@@ -364,7 +364,7 @@
         left: -100px;
     }
 }
-//* ── DESKTOP / MOBILE VISIBILITY ── */
+/* ── DESKTOP / MOBILE VISIBILITY ── */
 .desktop-only { display: flex; }
 .mobile-only  { display: none; }
 
