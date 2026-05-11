@@ -76,7 +76,7 @@ function Home() {
   <div className="hero-inner">
 
     {/* Top-left */}
-    <div style={{ position: 'absolute', top: '60px', left: '30px', zIndex: 1, transform: 'rotate(-12deg)' }}>
+    <div className="hero-flip-wrapper" style={{ position: 'absolute', top: '60px', left: '30px', zIndex: 1, transform: 'rotate(-12deg)' }}>
       <div className="flip-card" style={{ '--delay': '0s' }}>
         <div className="flip-card-inner">
           <div className="flip-card-front">
@@ -94,7 +94,7 @@ function Home() {
     </div>
 
     {/* Bottom-left */}
-    <div style={{ position: 'absolute', bottom: '20px', left: '120px', zIndex: 1, transform: 'rotate(12deg)' }}>
+    <div className="hero-flip-wrapper hero-flip-wrapper--small" style={{ position: 'absolute', bottom: '20px', left: '120px', zIndex: 1, transform: 'rotate(12deg)' }}>
       <div className="flip-card" style={{ '--delay': '1.5s' }}>
         <div className="flip-card-inner">
           <div className="flip-card-front">
@@ -112,7 +112,7 @@ function Home() {
     </div>
 
     {/* Top-right */}
-    <div style={{ position: 'absolute', top: '40px', right: '60px', zIndex: 3, transform: 'rotate(8deg)' }}>
+    <div className="hero-flip-wrapper" style={{ position: 'absolute', top: '40px', right: '60px', zIndex: 1, transform: 'rotate(8deg)' }}>
       <div className="flip-card" style={{ '--delay': '3s' }}>
         <div className="flip-card-inner">
           <div className="flip-card-front">
@@ -130,7 +130,7 @@ function Home() {
     </div>
 
     {/* Bottom-right */}
-    <div style={{ position: 'absolute', bottom: '20px', right: '30px', zIndex: 1, transform: 'rotate(-12deg)' }}>
+    <div className="hero-flip-wrapper hero-flip-wrapper--small" style={{ position: 'absolute', bottom: '20px', right: '30px', zIndex: 1, transform: 'rotate(-12deg)' }}>
       <div className="flip-card" style={{ '--delay': '4.5s' }}>
         <div className="flip-card-inner">
           <div className="flip-card-front">

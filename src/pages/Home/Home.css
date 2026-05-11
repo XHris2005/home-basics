@@ -235,6 +235,23 @@
     font-size: 2rem;
   }
 }
+/* Bottom cards are smaller than top cards */
+.hero-flip-wrapper--small .flip-card {
+  width: 110px;
+  height: 125px;
+}
+
+.hero-flip-wrapper--small .flip-front-img {
+  width: 60px;
+  height: 60px;
+}
+
+/* Hide all hero cards on mobile */
+@media (max-width: 768px) {
+  .hero-flip-wrapper {
+    display: none;
+  }
+}
 
 /* ── MEMBER BANNER ── */
 .member-banner {

@@ -68,18 +68,20 @@ export async function getAllProducts(filters = {}) {
     query = query.ilike('name', `%${filters.search}%`)
   }
 
-  if (filters.category) {
-    // First get the category id by name or slug
-    const { data: catData } = await supabase
-      .from('categories')
-      .select('id')
-      .or(`name.eq.${filters.category},slug.eq.${filters.category}`)
-      .single()
+ if (filters.category) {
+  const { data: catData } = await supabase
+    .from('categories')
+    .select('id')
+    .eq('name', filters.category)
+    .maybeSingle()
 
-    if (catData?.id) {
-      query = query.eq('category_id', catData.id)
-    }
+  if (catData?.id) {
+    query = query.eq('category_id', catData.id)
+  } else {
+    // No matching category found — return empty rather than all products
+    return []
   }
+}
 
   if (filters.minPrice) query = query.gte('retail_price', filters.minPrice)
   if (filters.maxPrice) query = query.lte('retail_price', filters.maxPrice)
