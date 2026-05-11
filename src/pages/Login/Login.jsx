@@ -6,7 +6,6 @@ import { supabase } from '../../services/supabase'
 import './Login.css'
 
 function Login() {
-  const { login, googleLogin } = useAuth()
   const navigate = useNavigate()
   const { login, signInWithGoogle } = useAuth()
   const [formData, setFormData] = useState({ email: '', password: '' })
