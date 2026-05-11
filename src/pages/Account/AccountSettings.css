@@ -1,0 +1,183 @@
+.account-settings {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.account-settings__title {
+  font-size: 24px;
+  font-weight: 700;
+  color: #1a1a1a;
+  margin: 0 0 4px;
+}
+
+.account-settings__sub {
+  font-size: 14px;
+  color: #888;
+  margin: 0;
+}
+
+.account-settings__card {
+  background: #fff;
+  border: 1px solid #e8e8e8;
+  border-radius: 16px;
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.account-settings__card--danger {
+  border-color: #fdecea;
+}
+
+.account-settings__card-title {
+  font-size: 16px;
+  font-weight: 700;
+  color: #1a1a1a;
+  margin: 0;
+}
+
+.account-settings__card-title--danger {
+  color: #e53935;
+}
+
+.account-settings__card-text {
+  font-size: 13px;
+  color: #666;
+  margin: 0;
+  line-height: 1.6;
+}
+
+.account-settings__form {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.account-settings__field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.account-settings__label {
+  font-size: 13px;
+  font-weight: 500;
+  color: #444;
+}
+
+.account-settings__input {
+  padding: 10px 14px;
+  border: 1px solid #e8e8e8;
+  border-radius: 10px;
+  font-size: 14px;
+  color: #1a1a1a;
+  outline: none;
+  transition: border 0.15s;
+  font-family: inherit;
+}
+
+.account-settings__input:focus {
+  border-color: #01A451;
+}
+
+.account-settings__error {
+  font-size: 13px;
+  color: #e53935;
+  margin: 0;
+}
+
+.account-settings__success {
+  font-size: 13px;
+  color: #01A451;
+  margin: 0;
+}
+
+/* Info Rows */
+.account-settings__info-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 0;
+  border-bottom: 1px solid #f0f0f0;
+  font-size: 14px;
+}
+
+.account-settings__info-row:last-of-type {
+  border-bottom: none;
+}
+
+.account-settings__info-label {
+  color: #888;
+}
+
+.account-settings__info-value {
+  color: #1a1a1a;
+  font-weight: 500;
+}
+
+/* Buttons */
+.account-settings__btn {
+  padding: 10px 24px;
+  border-radius: 100px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  border: none;
+  transition: background 0.15s;
+  align-self: flex-start;
+  font-family: inherit;
+}
+
+.account-settings__btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.account-settings__btn:not(.account-settings__btn--danger):not(.account-settings__btn--ghost) {
+  background: #01A451;
+  color: #fff;
+}
+
+.account-settings__btn:not(.account-settings__btn--danger):not(.account-settings__btn--ghost):hover {
+  background: #018a44;
+}
+
+.account-settings__btn--danger {
+  background: #e53935;
+  color: #fff;
+}
+
+.account-settings__btn--danger:hover {
+  background: #c62828;
+}
+
+.account-settings__btn--ghost {
+  background: #f5f5f5;
+  color: #444;
+}
+
+.account-settings__btn--ghost:hover {
+  background: #ebebeb;
+}
+
+/* Delete Confirm */
+.account-settings__delete-confirm {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.account-settings__delete-text {
+  font-size: 13px;
+  color: #444;
+  margin: 0;
+  line-height: 1.6;
+}
+
+.account-settings__delete-actions {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+}

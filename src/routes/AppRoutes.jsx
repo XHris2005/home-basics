@@ -4,6 +4,12 @@ import Shop from '../pages/Shop/Shop'
 import Login from '../pages/Login/Login'
 import Register from '../pages/Register/Register'
 import Account from '../pages/Account/Account'
+import AccountDashboard from '../pages/Account/AccountDashboard'
+import AccountProfile from '../pages/Account/AccountProfile'
+import AccountOrders from '../pages/Account/AccountOrders'
+import AccountAddresses from '../pages/Account/AccountAddresses'
+import AccountMembership from '../pages/Account/AccountMembership'
+import AccountSettings from '../pages/Account/AccountSettings'
 import Cart from '../pages/Cart/Cart'
 import Checkout from '../pages/Checkout/Checkout'
 import ProductDetail from '../pages/ProductDetail/ProductDetail'
@@ -39,7 +45,14 @@ function AppRoutes() {
       {/* Protected - logged in users */}
       <Route element={<ProtectedRoute />}>
         <Route path="/checkout" element={<Checkout />} />
-        <Route path="/account" element={<Account />} />
+        <Route path="/account" element={<Account />}>
+          <Route index element={<AccountDashboard />} />
+          <Route path="profile" element={<AccountProfile />} />
+          <Route path="orders" element={<AccountOrders />} />
+          <Route path="addresses" element={<AccountAddresses />} />
+          <Route path="membership" element={<AccountMembership />} />
+          <Route path="settings" element={<AccountSettings />} />
+        </Route>
         <Route path="/order-success" element={<OrderSuccess />} />
       </Route>
 

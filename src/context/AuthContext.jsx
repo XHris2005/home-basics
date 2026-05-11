@@ -9,14 +9,12 @@ export function AuthProvider({ children }) {
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
-    // Get initial session
     supabase.auth.getSession().then(({ data: { session } }) => {
       setUser(session?.user ?? null)
       if (session?.user) fetchProfile(session.user.id)
       else setLoading(false)
     })
 
-    // Listen for auth changes
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
       async (_event, session) => {
         setUser(session?.user ?? null)
@@ -42,7 +40,7 @@ export function AuthProvider({ children }) {
     setLoading(false)
   }
 
-  async function register({ fullName, email, password, phone, role, memberCode }) {
+  async function register({ fullName, email, password, phone, memberCode }) {
     const { data, error } = await supabase.auth.signUp({
       email,
       password,
@@ -53,27 +51,56 @@ export function AuthProvider({ children }) {
 
     if (error) return { error }
 
-    // Update profile with extra fields
-    const { error: profileError } = await supabase
-      .from('profiles')
-      .update({
-        phone,
-        role: role === 'member' ? 'retail' : 'retail', // always starts as retail
-        member_code: role === 'member' ? memberCode : null,
-        member_status: role === 'member' ? 'pending' : 'none'
-      })
-      .eq('id', data.user.id)
+    // Wait for trigger to create profile row
+    await new Promise(resolve => setTimeout(resolve, 1000))
 
-    if (profileError) return { error: profileError }
+    const updates = { phone }
 
-    // If registering as member, create an application
-    if (role === 'member' && memberCode) {
-      await supabase.from('member_applications').insert({
-        user_id: data.user.id,
-        member_code: memberCode,
-        status: 'pending'
-      })
+    if (memberCode) {
+      const codeRegex = /^NG\d{8}$/
+      if (codeRegex.test(memberCode)) {
+        const { data: codeData } = await supabase
+          .from('membership_codes')
+          .select('*')
+          .eq('code', memberCode)
+          .eq('is_active', true)
+          .single()
+
+        if (codeData) {
+          const now = new Date()
+          const expiresAt = new Date(codeData.expires_at)
+
+          if (now <= expiresAt) {
+            updates.role = 'member'
+            updates.member_code = memberCode
+            updates.member_status = 'approved'
+
+            await supabase.from('admin_notifications').insert({
+              type: 'new_member',
+              message: `New member registered: ${fullName} (${email}) using code ${memberCode}.`,
+              is_read: false,
+            })
+          } else {
+            await supabase.from('admin_notifications').insert({
+              type: 'code_expired',
+              message: `User ${fullName} (${email}) tried expired code ${memberCode} during registration.`,
+              is_read: false,
+            })
+          }
+        } else {
+          await supabase.from('admin_notifications').insert({
+            type: 'code_not_found',
+            message: `User ${fullName} (${email}) tried unrecognised code ${memberCode} during registration.`,
+            is_read: false,
+          })
+        }
+      }
     }
+
+    await supabase
+      .from('profiles')
+      .update(updates)
+      .eq('id', data.user.id)
 
     return { data }
   }
@@ -127,6 +154,7 @@ export function AuthProvider({ children }) {
       signInWithGoogle,
       login,
       logout,
+      googleLogin,
       forgotPassword,
       fetchProfile
     }}>

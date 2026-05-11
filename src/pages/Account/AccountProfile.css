@@ -1,0 +1,145 @@
+.account-profile {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.account-profile__title {
+  font-size: 24px;
+  font-weight: 700;
+  color: #1a1a1a;
+  margin: 0 0 4px;
+}
+
+.account-profile__sub {
+  font-size: 14px;
+  color: #888;
+  margin: 0;
+}
+
+.account-profile__card {
+  background: #fff;
+  border: 1px solid #e8e8e8;
+  border-radius: 16px;
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.account-profile__avatar {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding-bottom: 24px;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.account-profile__initials {
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  background: #01A451;
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 22px;
+  font-weight: 700;
+  flex-shrink: 0;
+}
+
+.account-profile__name {
+  font-size: 16px;
+  font-weight: 600;
+  color: #1a1a1a;
+  margin: 0 0 2px;
+}
+
+.account-profile__email {
+  font-size: 13px;
+  color: #888;
+  margin: 0;
+}
+
+.account-profile__form {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.account-profile__field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.account-profile__label {
+  font-size: 13px;
+  font-weight: 500;
+  color: #444;
+}
+
+.account-profile__input {
+  padding: 10px 14px;
+  border: 1px solid #e8e8e8;
+  border-radius: 10px;
+  font-size: 14px;
+  color: #1a1a1a;
+  outline: none;
+  transition: border 0.15s;
+  font-family: inherit;
+}
+
+.account-profile__input:focus {
+  border-color: #01A451;
+}
+
+.account-profile__input--disabled {
+  background: #fafafa;
+  color: #aaa;
+  cursor: not-allowed;
+}
+
+.account-profile__hint {
+  font-size: 11px;
+  color: #aaa;
+  margin: 0;
+}
+
+.account-profile__error {
+  font-size: 13px;
+  color: #e53935;
+  margin: 0;
+}
+
+.account-profile__success {
+  font-size: 13px;
+  color: #01A451;
+  margin: 0;
+}
+
+.account-profile__btn {
+  padding: 12px;
+  background: #01A451;
+  color: #fff;
+  border: none;
+  border-radius: 100px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.15s;
+  align-self: flex-start;
+  padding-left: 32px;
+  padding-right: 32px;
+  font-family: inherit;
+}
+
+.account-profile__btn:hover {
+  background: #018a44;
+}
+
+.account-profile__btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}

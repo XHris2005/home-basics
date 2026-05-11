@@ -1,0 +1,318 @@
+.account-addresses {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.account-addresses__header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+}
+
+.account-addresses__title {
+  font-size: 24px;
+  font-weight: 700;
+  color: #1a1a1a;
+  margin: 0 0 4px;
+}
+
+.account-addresses__sub {
+  font-size: 14px;
+  color: #888;
+  margin: 0;
+}
+
+.account-addresses__add-btn {
+  padding: 10px 20px;
+  background: #01A451;
+  color: #fff;
+  border: none;
+  border-radius: 100px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.15s;
+  font-family: inherit;
+  flex-shrink: 0;
+}
+
+.account-addresses__add-btn:hover {
+  background: #018a44;
+}
+
+.account-addresses__empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 60px 0;
+  gap: 12px;
+  background: #fff;
+  border: 1px solid #e8e8e8;
+  border-radius: 16px;
+  color: #888;
+  font-size: 14px;
+}
+
+.account-addresses__empty-icon {
+  font-size: 40px;
+}
+
+.account-addresses__empty-btn {
+  padding: 10px 24px;
+  background: #01A451;
+  color: #fff;
+  border: none;
+  border-radius: 100px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  margin-top: 8px;
+  font-family: inherit;
+}
+
+.account-addresses__grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+
+/* Address Card */
+.address-card {
+  background: #fff;
+  border: 1px solid #e8e8e8;
+  border-radius: 16px;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  position: relative;
+}
+
+.address-card--default {
+  border-color: #01A451;
+}
+
+.address-card__default-badge {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  background: #FF6B35;
+  color: #fff;
+  font-size: 11px;
+  font-weight: 600;
+  padding: 2px 8px;
+  border-radius: 100px;
+}
+
+.address-card__name {
+  font-size: 14px;
+  font-weight: 600;
+  color: #1a1a1a;
+  margin: 0 0 4px;
+}
+
+.address-card__line {
+  font-size: 13px;
+  color: #444;
+  margin: 0;
+}
+
+.address-card__phone {
+  font-size: 13px;
+  color: #888;
+  margin: 4px 0 0;
+}
+
+.address-card__actions {
+  display: flex;
+  gap: 8px;
+  margin-top: 12px;
+  padding-top: 12px;
+  border-top: 1px solid #f0f0f0;
+  flex-wrap: wrap;
+}
+
+.address-card__action-btn {
+  font-size: 12px;
+  font-weight: 500;
+  color: #01A451;
+  background: none;
+  border: 1px solid #e8e8e8;
+  border-radius: 100px;
+  padding: 4px 12px;
+  cursor: pointer;
+  transition: background 0.15s;
+  font-family: inherit;
+}
+
+.address-card__action-btn:hover {
+  background: #f5f5f5;
+}
+
+.address-card__action-btn--delete {
+  color: #e53935;
+}
+
+/* Modal */
+.addresses-modal-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  padding: 24px;
+}
+
+.addresses-modal {
+  background: #fff;
+  border-radius: 16px;
+  padding: 24px;
+  width: 100%;
+  max-width: 480px;
+  max-height: 90vh;
+  overflow-y: auto;
+}
+
+.addresses-modal--sm {
+  max-width: 360px;
+}
+
+.addresses-modal__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+
+.addresses-modal__title {
+  font-size: 18px;
+  font-weight: 700;
+  color: #1a1a1a;
+  margin: 0;
+}
+
+.addresses-modal__close {
+  background: none;
+  border: none;
+  font-size: 16px;
+  color: #888;
+  cursor: pointer;
+  padding: 4px;
+}
+
+.addresses-modal__form {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.addresses-modal__row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+.addresses-modal__field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.addresses-modal__label {
+  font-size: 13px;
+  font-weight: 500;
+  color: #444;
+}
+
+.addresses-modal__optional {
+  color: #aaa;
+  font-weight: 400;
+}
+
+.addresses-modal__input {
+  padding: 10px 14px;
+  border: 1px solid #e8e8e8;
+  border-radius: 10px;
+  font-size: 14px;
+  color: #1a1a1a;
+  outline: none;
+  transition: border 0.15s;
+  font-family: inherit;
+}
+
+.addresses-modal__input:focus {
+  border-color: #01A451;
+}
+
+.addresses-modal__checkbox {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  color: #444;
+  cursor: pointer;
+}
+
+.addresses-modal__error {
+  font-size: 13px;
+  color: #e53935;
+  margin: 0;
+}
+
+.addresses-modal__confirm-text {
+  font-size: 14px;
+  color: #444;
+  margin: 0 0 20px;
+}
+
+.addresses-modal__footer {
+  display: flex;
+  gap: 12px;
+  justify-content: flex-end;
+  margin-top: 8px;
+}
+
+.addresses-modal__cancel {
+  padding: 10px 20px;
+  background: #f5f5f5;
+  color: #444;
+  border: none;
+  border-radius: 100px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  font-family: inherit;
+}
+
+.addresses-modal__submit {
+  padding: 10px 20px;
+  background: #01A451;
+  color: #fff;
+  border: none;
+  border-radius: 100px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  font-family: inherit;
+}
+
+.addresses-modal__submit:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.addresses-modal__delete {
+  padding: 10px 20px;
+  background: #e53935;
+  color: #fff;
+  border: none;
+  border-radius: 100px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  font-family: inherit;
+}
