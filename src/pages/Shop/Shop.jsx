@@ -16,6 +16,41 @@ const SORT_OPTIONS = [
   { label: 'Highest Rating', value: 'rating' },
 ]
 
+function DualRangeSlider({ min, max, step, value, onChange }) {
+  const [minVal, maxVal] = value
+  const minPercent = ((minVal - min) / (max - min)) * 100
+  const maxPercent = ((maxVal - min) / (max - min)) * 100
+
+  return (
+    <div className="dual-range-wrapper">
+      <div className="dual-range-track">
+        <div
+          className="dual-range-fill"
+          style={{ left: `${minPercent}%`, width: `${maxPercent - minPercent}%` }}
+        />
+      </div>
+      <input
+        type="range" min={min} max={max} step={step}
+        value={minVal}
+        onChange={e => {
+          const val = Math.min(Number(e.target.value), maxVal - step)
+          onChange([val, maxVal])
+        }}
+        className="dual-range-input dual-range-min"
+      />
+      <input
+        type="range" min={min} max={max} step={step}
+        value={maxVal}
+        onChange={e => {
+          const val = Math.max(Number(e.target.value), minVal + step)
+          onChange([minVal, val])
+        }}
+        className="dual-range-input dual-range-max"
+      />
+    </div>
+  )
+}
+
 function Shop() {
   const { isMember } = useAuth()
   const [searchParams] = useSearchParams()
@@ -183,22 +218,20 @@ function Shop() {
                 </svg>
               </button>
               {openSections.price && (
-                <div className="filter-section-body">
-                  <input
-                    type="range"
-                    min="0"
-                    max="50000"
-                    step="500"
-                    value={priceRange[1]}
-                    onChange={e => setPriceRange([priceRange[0], Number(e.target.value)])}
-                    className="price-range-slider"
-                  />
-                  <div className="price-range-labels">
-                    <span>₦{priceRange[0].toLocaleString()}</span>
-                    <span>₦{priceRange[1].toLocaleString()}</span>
-                  </div>
-                </div>
-              )}
+  <div className="filter-section-body">
+    <DualRangeSlider
+      min={0}
+      max={50000}
+      step={500}
+      value={priceRange}
+      onChange={setPriceRange}
+    />
+    <div className="price-range-labels">
+      <span>₦{priceRange[0].toLocaleString()}</span>
+      <span>₦{priceRange[1].toLocaleString()}</span>
+    </div>
+  </div>
+)}
             </div>
 
             {/* Brand */}

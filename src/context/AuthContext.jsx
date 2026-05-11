@@ -1,7 +1,7 @@
 import { createContext, useContext, useEffect, useState } from 'react'
 import { supabase } from '../services/supabase'
 
-const AuthContext = createContext()
+export const AuthContext = createContext()
 
 export function AuthProvider({ children }) {
   const [user, setUser] = useState(null)
@@ -87,6 +87,16 @@ export function AuthProvider({ children }) {
     return { data }
   }
 
+  async function signInWithGoogle() {
+  const { error } = await supabase.auth.signInWithOAuth({
+    provider: 'google',
+    options: {
+      redirectTo: `${window.location.origin}/`,
+    },
+  })
+  if (error) throw error
+}
+
   async function logout() {
     const { error } = await supabase.auth.signOut()
     if (error) return { error }
@@ -114,6 +124,7 @@ export function AuthProvider({ children }) {
       isMember,
       isPendingMember,
       register,
+      signInWithGoogle,
       login,
       logout,
       forgotPassword,

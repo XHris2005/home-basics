@@ -64,8 +64,23 @@ export async function getAllProducts(filters = {}) {
     .select('*, categories(name, slug)')
     .eq('is_active', true)
 
-  if (filters.search) query = query.ilike('name', `%${filters.search}%`)
-  if (filters.category) query = query.eq('categories.slug', filters.category)
+  if (filters.search) {
+    query = query.ilike('name', `%${filters.search}%`)
+  }
+
+  if (filters.category) {
+    // First get the category id by name or slug
+    const { data: catData } = await supabase
+      .from('categories')
+      .select('id')
+      .or(`name.eq.${filters.category},slug.eq.${filters.category}`)
+      .single()
+
+    if (catData?.id) {
+      query = query.eq('category_id', catData.id)
+    }
+  }
+
   if (filters.minPrice) query = query.gte('retail_price', filters.minPrice)
   if (filters.maxPrice) query = query.lte('retail_price', filters.maxPrice)
 
