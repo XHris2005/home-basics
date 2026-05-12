@@ -154,7 +154,6 @@ export function AuthProvider({ children }) {
       signInWithGoogle,
       login,
       logout,
-      googleLogin,
       forgotPassword,
       fetchProfile
     }}>
