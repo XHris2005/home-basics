@@ -79,12 +79,6 @@ function Login() {
         <div className="auth-right">
           <div className="auth-card">
             {error && <div className="auth-error">{error}</div>}
-
-
-            <div className="auth-divider">
-              <span>or</span>
-            </div>
-
             <form onSubmit={handleSubmit} className="auth-form">
               <div className="form-group">
                 <label htmlFor="email">Email</label>

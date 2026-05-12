@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from 'react'
 import { Link } from 'react-router-dom'
 import { useAuth } from '../../hooks/useAuth'
-import { getFeaturedProducts, getOrekelwaDeals } from '../../services/products'
+import { getFeaturedProducts, getOrekelwaDeals, getAllProducts } from '../../services/products'
 import ProductCard from '../../components/ProductCard/ProductCard'
 import crown from "../../assets/crown.png";
 import './Home.css'
@@ -33,7 +33,9 @@ function Home() {
   const { isMember } = useAuth()
   const [featuredProducts, setFeaturedProducts] = useState([])
   const [dealsProducts, setDealsProducts] = useState([])
+  const [allProducts, setAllProducts] = useState([])
   const [loading, setLoading] = useState(true)
+  const [cardProducts, setCardProducts] = useState([])
 
   const memberBannerRef  = useScrollReveal()
   const featuredRef      = useScrollReveal()
@@ -43,16 +45,37 @@ function Home() {
 
   useEffect(() => {
     async function loadProducts() {
-      const [featured, deals] = await Promise.all([
-        getFeaturedProducts(),
-        getOrekelwaDeals()
-      ])
-      setFeaturedProducts(featured)
-      setDealsProducts(deals)
-      setLoading(false)
-    }
+  const [featured, deals, all] = await Promise.all([
+    getFeaturedProducts(),
+    getOrekelwaDeals(),
+    getAllProducts()
+  ])
+  setFeaturedProducts(featured)
+  setDealsProducts(deals)
+  setAllProducts(all)
+  setLoading(false)
+}
     loadProducts()
   }, [])
+
+  useEffect(() => {
+  if (allProducts.length === 0) return
+
+  function pickRandom() {
+  const shuffled = [...allProducts].sort(() => Math.random() - 0.5)
+  // Each card gets a unique product by taking one from each position
+  setCardProducts([
+    shuffled[0] || null,
+    shuffled[1] || null,
+    shuffled[2] || null,
+    shuffled[3] || null,
+  ])
+}
+
+  pickRandom()
+  const interval = setInterval(pickRandom, 6000)
+  return () => clearInterval(interval)
+}, [allProducts])
 
   useEffect(() => {
   const timer = setTimeout(() => {
@@ -80,10 +103,10 @@ function Home() {
       <div className="flip-card" style={{ '--delay': '0s' }}>
         <div className="flip-card-inner">
           <div className="flip-card-front">
-            <div className="flip-front-img" style={{ backgroundImage: 'url(https://res.cloudinary.com/db2a43rey/image/upload/v1777816491/1777673684456_avgyk5.png)' }} />
-            <p className="flip-front-name">Coconut Oil</p>
-            <span className="flip-front-stars">★★★★★</span>
-          </div>
+  <img src={cardProducts[0]?.images?.[0]} className="flip-front-img-actual" alt="" />
+  <p className="flip-front-name">{cardProducts[0]?.name}</p>
+  <span className="flip-front-stars">★★★★★</span>
+</div>
           <div className="flip-card-back">
             <p className="discount-label">SAVE UP TO</p>
             <p className="discount-percent">15%</p>
@@ -98,10 +121,10 @@ function Home() {
       <div className="flip-card" style={{ '--delay': '1.5s' }}>
         <div className="flip-card-inner">
           <div className="flip-card-front">
-            <div className="flip-front-img" style={{ backgroundImage: 'url(https://res.cloudinary.com/db2a43rey/image/upload/v1777816491/1777673684456_avgyk5.png)' }} />
-            <p className="flip-front-name">Body Scrub</p>
-            <span className="flip-front-stars">★★★★★</span>
-          </div>
+  <img src={cardProducts[1]?.images?.[0]} className="flip-front-img-actual" alt="" />
+  <p className="flip-front-name">{cardProducts[0]?.name}</p>
+  <span className="flip-front-stars">★★★★★</span>
+</div>
           <div className="flip-card-back">
             <p className="discount-label">SAVE UP TO</p>
             <p className="discount-percent">15%</p>
@@ -116,10 +139,10 @@ function Home() {
       <div className="flip-card" style={{ '--delay': '3s' }}>
         <div className="flip-card-inner">
           <div className="flip-card-front">
-            <div className="flip-front-img" style={{ backgroundImage: 'url(https://res.cloudinary.com/db2a43rey/image/upload/v1777816491/1777673684456_avgyk5.png)' }} />
-            <p className="flip-front-name">Coconut Oil</p>
-            <span className="flip-front-stars">★★★★★</span>
-          </div>
+  <img src={cardProducts[2]?.images?.[0]} className="flip-front-img-actual" alt="" />
+  <p className="flip-front-name">{cardProducts[0]?.name}</p>
+  <span className="flip-front-stars">★★★★★</span>
+</div>
           <div className="flip-card-back">
             <p className="discount-label">SAVE UP TO</p>
             <p className="discount-percent">15%</p>
@@ -134,10 +157,10 @@ function Home() {
       <div className="flip-card" style={{ '--delay': '4.5s' }}>
         <div className="flip-card-inner">
           <div className="flip-card-front">
-            <div className="flip-front-img" style={{ backgroundImage: 'url(https://res.cloudinary.com/db2a43rey/image/upload/v1777816491/1777673684456_avgyk5.png)' }} />
-            <p className="flip-front-name">Home Spray</p>
-            <span className="flip-front-stars">★★★★☆</span>
-          </div>
+  <img src={cardProducts[3]?.images?.[0]} className="flip-front-img-actual" alt="" />
+  <p className="flip-front-name">{cardProducts[0]?.name}</p>
+  <span className="flip-front-stars">★★★★★</span>
+</div>
           <div className="flip-card-back">
             <p className="discount-label">SAVE UP TO</p>
             <p className="discount-percent">15%</p>
