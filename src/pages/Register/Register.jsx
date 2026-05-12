@@ -22,16 +22,6 @@ function Register() {
     setFormData({ ...formData, [e.target.name]: e.target.value })
   }
 
-  async function handleGoogleSignup() {
-    setGoogleLoading(true)
-    setError('')
-    const { error } = await googleLogin()
-    if (error) {
-      setError(error.message)
-      setGoogleLoading(false)
-    }
-    // No need to navigate — Supabase redirects automatically
-  }
 
   async function handleSubmit(e) {
     e.preventDefault()
