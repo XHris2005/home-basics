@@ -27,6 +27,8 @@ import Delivery from '../pages/admin/Delivery/Delivery'
 import Analytics from '../pages/admin/Analytics/Analytics'
 import Settings from '../pages/admin/Settings/Settings'
 import AuthCallback from '../pages/AuthCallback/AuthCallback'
+import RegisterSuccess from '../pages/RegisterSuccess/RegisterSuccess'
+import ResetPassword from '../pages/ResetPassword/ResetPassword'
 
 function AppRoutes() {
   return (
@@ -34,7 +36,9 @@ function AppRoutes() {
       {/* Public routes */}
       <Route path="/" element={<Home />} />
       <Route path="/shop" element={<Shop />} />
+      <Route path="/register-success" element={<RegisterSuccess />} />
       <Route path="/shop/:slug" element={<ProductDetail />} />
+      <Route path="/reset-password" element={<ResetPassword />} />
       <Route path="/cart" element={<Cart />} />
       <Route path="/login" element={<Login />} />
       <Route path="/register" element={<Register />} />

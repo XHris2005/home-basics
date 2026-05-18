@@ -1,9 +1,21 @@
 import { useState } from 'react'
+import { Link } from 'react-router-dom'
 import { useAuth } from '../../hooks/useAuth'
 import { supabase } from '../../services/supabase'
 import './AccountMembership.css'
 
 const MEMBERSHIP_CODE_REGEX = /^NG\d{8}$/
+
+function namesMatch(profileName, bearerName) {
+  if (!profileName || !bearerName) return false
+
+  const normalize = name => name.toLowerCase().trim().split(/\s+/).sort()
+  const profileWords = normalize(profileName)
+  const bearerWords = normalize(bearerName)
+
+  return bearerWords.every(word => profileWords.includes(word)) ||
+    profileWords.every(word => bearerWords.includes(word))
+}
 
 function AccountMembership() {
   const { user, profile, isMember, isPendingMember, fetchProfile } = useAuth()
@@ -11,6 +23,7 @@ function AccountMembership() {
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState(null)
   const [success, setSuccess] = useState(false)
+  const [pendingSubmitted, setPendingSubmitted] = useState(false)
 
   function validateCodeFormat(code) {
     return MEMBERSHIP_CODE_REGEX.test(code)
@@ -20,17 +33,17 @@ function AccountMembership() {
     e.preventDefault()
     setError(null)
     setSuccess(false)
+    setPendingSubmitted(false)
 
-    // Check format first
     if (!validateCodeFormat(code)) {
-      setError('Invalid membership code format. Code must start with NG followed by 8 digits. Example: NG07667991')
+      setError('Invalid membership code format.')
       return
     }
 
     setLoading(true)
 
     try {
-      // Check code exists in database and is active
+      // Check code exists in database
       const { data: codeData, error: codeError } = await supabase
         .from('membership_codes')
         .select('*')
@@ -39,10 +52,9 @@ function AccountMembership() {
         .single()
 
       if (codeError || !codeData) {
-        // Valid format but not in database — notify admin
         await supabase.from('admin_notifications').insert({
           type: 'code_not_found',
-          message: `User ${profile?.full_name} (${user.email}) attempted to use membership code ${code} — code not found in database. Possible data entry error.`,
+          message: `User ${profile?.full_name} (${user.email}) attempted to use membership code ${code} — code not found in database.`,
           is_read: false,
         })
         setError('Membership code not found. Please check your code or contact support.')
@@ -50,15 +62,25 @@ function AccountMembership() {
         return
       }
 
-      // Check if code is expired
+      // Check if already used by someone else
+      if (codeData.used_by && codeData.used_by !== user.id) {
+        await supabase.from('admin_notifications').insert({
+          type: 'code_already_used',
+          message: `User ${profile?.full_name} (${user.email}) attempted to use membership code ${code} which is already activated by another account.`,
+          is_read: false,
+        })
+        setError('This membership code has already been used. Please contact support.')
+        setLoading(false)
+        return
+      }
+
+      // Check if expired
       const now = new Date()
       const expiresAt = new Date(codeData.expires_at)
-
       if (now > expiresAt) {
-        // Expired code — notify admin
         await supabase.from('admin_notifications').insert({
           type: 'code_expired',
-          message: `User ${profile?.full_name} (${user.email}) attempted to use expired membership code ${code}. Expired on ${expiresAt.toDateString()}.`,
+          message: `User ${profile?.full_name} (${user.email}) attempted to use expired membership code ${code}.`,
           is_read: false,
         })
         setError('This membership code has expired. Please contact support.')
@@ -66,7 +88,32 @@ function AccountMembership() {
         return
       }
 
-      // Code is valid — upgrade user to member
+      // Check name match
+      const isNameMatch = namesMatch(profile?.full_name, codeData.bearer_name)
+
+      if (!isNameMatch) {
+        // Name doesn't match — set as pending
+        await supabase
+          .from('profiles')
+          .update({
+            member_code: code,
+            member_status: 'pending',
+          })
+          .eq('id', user.id)
+
+        await supabase.from('admin_notifications').insert({
+          type: 'name_mismatch',
+          message: `Membership pending review: User ${profile?.full_name} (${user.email}) used code ${code} assigned to "${codeData.bearer_name}". Names do not match — manual approval required.`,
+          is_read: false,
+        })
+
+        await fetchProfile(user.id)
+        setPendingSubmitted(true)
+        setLoading(false)
+        return
+      }
+
+      // Everything valid — activate membership
       const { error: updateError } = await supabase
         .from('profiles')
         .update({
@@ -78,16 +125,23 @@ function AccountMembership() {
 
       if (updateError) throw updateError
 
-      // Notify admin of successful membership
+      // Mark code as used
+      await supabase
+        .from('membership_codes')
+        .update({ used_by: user.id })
+        .eq('id', codeData.id)
+
+      // Notify admin
       await supabase.from('admin_notifications').insert({
         type: 'new_member',
-        message: `New member registered: ${profile?.full_name} (${user.email}) using code ${code}.`,
+        message: `New member activated: ${profile?.full_name} (${user.email}) using code ${code}.`,
         is_read: false,
       })
 
       await fetchProfile(user.id)
       setSuccess(true)
       setCode('')
+
     } catch (err) {
       setError('Something went wrong. Please try again.')
     } finally {
@@ -125,8 +179,8 @@ function AccountMembership() {
     )
   }
 
-  // Pending approval
-  if (isPendingMember) {
+  // Pending — name mismatch, waiting for admin approval
+  if (isPendingMember || pendingSubmitted) {
     return (
       <div className="account-membership">
         <div className="account-membership__header">
@@ -136,18 +190,21 @@ function AccountMembership() {
 
         <div className="account-membership__card account-membership__card--pending">
           <div className="account-membership__badge account-membership__badge--pending">
-            Pending
+            Pending Review
           </div>
           <h2 className="account-membership__card-title">
             Application Under Review
           </h2>
           <p className="account-membership__card-text">
-            Your membership application is being reviewed. You'll be notified once it's approved.
+            Your membership code has been submitted but your name could not be automatically verified. Our admin team is reviewing your application and will activate your membership shortly.
+          </p>
+          <p className="account-membership__card-text">
+            If you have any questions, please contact support.
           </p>
           <div className="account-membership__code-row">
             <span className="account-membership__code-label">Code Submitted</span>
             <span className="account-membership__code-value">
-              {profile?.member_code}
+              {profile?.member_code || code}
             </span>
           </div>
         </div>
@@ -203,12 +260,12 @@ function AccountMembership() {
       <div className="account-membership__form-card">
         <h2 className="account-membership__form-title">Enter Membership Code</h2>
         <p className="account-membership__form-text">
-  Enter the membership code issued to you by the organisation.
-</p>
+          Enter the membership code issued to you by the organisation.
+        </p>
 
         {success && (
           <div className="account-membership__success">
-            Welcome! Your membership has been activated successfully.
+            🎉 Welcome! Your membership has been activated successfully.
           </div>
         )}
 
@@ -223,7 +280,7 @@ function AccountMembership() {
                 setCode(e.target.value.toUpperCase())
                 setError(null)
               }}
-              placeholder="e.g. NG07667991"
+              placeholder="Enter your membership code"
               maxLength={10}
               required
             />
