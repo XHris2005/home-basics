@@ -4,31 +4,54 @@ import { useAuth } from '../../hooks/useAuth'
 import crown from '../../assets/crown.png'
 import './Register.css'
 
+const passwordRegex = /^(?=.*[A-Z])(?=.*[a-z])(?=.*[0-9])(?=.*[^a-zA-Z0-9]).{8,}$/
+
 function Register() {
-  const { register, signInWithGoogle } = useAuth()
+  const { register, googleLogin } = useAuth()
   const navigate = useNavigate()
   const [formData, setFormData] = useState({
     fullName: '',
     email: '',
     phone: '',
     password: '',
+    confirmPassword: '',
   })
   const [showPassword, setShowPassword] = useState(false)
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false)
   const [error, setError] = useState('')
   const [loading, setLoading] = useState(false)
   const [googleLoading, setGoogleLoading] = useState(false)
+  const [showPasswordHints, setShowPasswordHints] = useState(false)
+
+  const passwordValid = passwordRegex.test(formData.password)
+  const passwordsMatch = formData.confirmPassword.length > 0 &&
+    formData.password === formData.confirmPassword
 
   function handleChange(e) {
     setFormData({ ...formData, [e.target.name]: e.target.value })
   }
 
+  async function handleGoogleSignIn() {
+    setGoogleLoading(true)
+    setError('')
+    const result = await googleLogin()
+    if (result?.error) {
+      setError(result.error.message)
+      setGoogleLoading(false)
+    }
+  }
 
   async function handleSubmit(e) {
     e.preventDefault()
     setError('')
 
-    if (formData.password.length < 6) {
-      setError('Password must be at least 6 characters')
+    if (!passwordValid) {
+      setError('Password does not meet the requirements.')
+      return
+    }
+
+    if (formData.password !== formData.confirmPassword) {
+      setError('Passwords do not match.')
       return
     }
 
@@ -47,17 +70,8 @@ function Register() {
       return
     }
 
-    navigate('/login')
+    navigate('/register-success')
   }
-
-  async function handleGoogleSignIn() {
-  try {
-    setError('')
-    await signInWithGoogle()
-  } catch (err) {
-    setError('Google sign in failed. Please try again.')
-  }
-}
 
   return (
     <div className="auth-page">
@@ -85,7 +99,29 @@ function Register() {
           <div className="auth-card">
             {error && <div className="auth-error">{error}</div>}
 
-            <form onSubmit={handleSubmit} className="auth-form">
+            {/* Google Signup */}
+            <button
+              type="button"
+              className="auth-google-btn"
+              onClick={handleGoogleSignIn}
+              disabled={googleLoading}
+            >
+              <svg width="18" height="18" viewBox="0 0 48 48">
+                <path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"/>
+                <path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"/>
+                <path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"/>
+                <path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.15 1.45-4.92 2.3-8.16 2.3-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"/>
+                <path fill="none" d="M0 0h48v48H0z"/>
+              </svg>
+              {googleLoading ? 'Redirecting...' : 'Continue with Google'}
+            </button>
+
+            <div className="auth-divider">
+              <span>or</span>
+            </div>
+
+            <form onSubmit={handleSubmit} className="auth-form" autoComplete="off">
+
               <div className="form-group">
                 <label htmlFor="fullName">Full Name</label>
                 <input
@@ -94,7 +130,8 @@ function Register() {
                   type="text"
                   value={formData.fullName}
                   onChange={handleChange}
-                  placeholder="Your name"
+                  placeholder="Your full name"
+                  autoComplete="off"
                   required
                 />
               </div>
@@ -108,6 +145,7 @@ function Register() {
                   value={formData.email}
                   onChange={handleChange}
                   placeholder="you@example.com"
+                  autoComplete="off"
                   required
                 />
               </div>
@@ -121,20 +159,32 @@ function Register() {
                   value={formData.phone}
                   onChange={handleChange}
                   placeholder="+234..."
+                  autoComplete="off"
                   required
                 />
               </div>
 
+              {/* Password */}
               <div className="form-group">
                 <label htmlFor="password">Password</label>
-                <div className="input-with-icon">
+                <div
+                  className="input-with-icon"
+                  style={{
+                    border: showPasswordHints && formData.password.length > 0 && !passwordValid
+                      ? '1.5px solid #e53935'
+                      : '1.5px solid #e8e8e8',
+                    borderRadius: '10px'
+                  }}
+                >
                   <input
                     id="password"
                     name="password"
                     type={showPassword ? 'text' : 'password'}
                     value={formData.password}
                     onChange={handleChange}
-                    placeholder="Min. 6 characters"
+                    placeholder="Min. 8 characters"
+                    autoComplete="new-password"
+                    onFocus={() => setShowPasswordHints(true)}
                     required
                   />
                   <button
@@ -156,21 +206,93 @@ function Register() {
                     )}
                   </button>
                 </div>
+
+                {showPasswordHints && (
+                  <div className="password-hints">
+                    <p className={`password-hint ${formData.password.length >= 8 ? 'valid' : 'invalid'}`}>
+                      <span>{formData.password.length >= 8 ? '✓' : '✗'}</span>
+                      At least 8 characters
+                    </p>
+                    <p className={`password-hint ${/[A-Z]/.test(formData.password) ? 'valid' : 'invalid'}`}>
+                      <span>{/[A-Z]/.test(formData.password) ? '✓' : '✗'}</span>
+                      At least one uppercase letter
+                    </p>
+                    <p className={`password-hint ${/[a-z]/.test(formData.password) ? 'valid' : 'invalid'}`}>
+                      <span>{/[a-z]/.test(formData.password) ? '✓' : '✗'}</span>
+                      At least one lowercase letter
+                    </p>
+                    <p className={`password-hint ${/[0-9]/.test(formData.password) ? 'valid' : 'invalid'}`}>
+                      <span>{/[0-9]/.test(formData.password) ? '✓' : '✗'}</span>
+                      At least one number
+                    </p>
+                    <p className={`password-hint ${/[^a-zA-Z0-9]/.test(formData.password) ? 'valid' : 'invalid'}`}>
+                      <span>{/[^a-zA-Z0-9]/.test(formData.password) ? '✓' : '✗'}</span>
+                      At least one symbol (e.g. @, #, !)
+                    </p>
+                  </div>
+                )}
               </div>
 
+              {/* Confirm Password */}
               <div className="form-group">
-                <label htmlFor="memberCode">
-                  Membership Code
-                  <span className="optional-label"> (optional)</span>
-                </label>
-                <input
-                  id="memberCode"
-                  name="memberCode"
-                  type="text"
-                  value={formData.memberCode}
-                  onChange={handleChange}
-                  placeholder="Enter membership code"
-                />
+                <label htmlFor="confirmPassword">Confirm Password</label>
+                <div
+                  className="input-with-icon"
+                  style={{
+                    border: formData.confirmPassword.length > 0 && !passwordsMatch
+                      ? '1.5px solid #e53935'
+                      : '1.5px solid #e8e8e8',
+                    borderRadius: '10px'
+                  }}
+                >
+                  <input
+                    id="confirmPassword"
+                    name="confirmPassword"
+                    type={showConfirmPassword ? 'text' : 'password'}
+                    value={formData.confirmPassword}
+                    onChange={handleChange}
+                    placeholder="Repeat your password"
+                    autoComplete="new-password"
+                    required
+                  />
+                  <button
+                    type="button"
+                    className="eye-toggle"
+                    onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                  >
+                    {showConfirmPassword ? (
+                      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                        <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94"/>
+                        <path d="M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19"/>
+                        <line x1="1" y1="1" x2="23" y2="23"/>
+                      </svg>
+                    ) : (
+                      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                        <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+                        <circle cx="12" cy="12" r="3"/>
+                      </svg>
+                    )}
+                  </button>
+                </div>
+                {formData.confirmPassword.length > 0 && !passwordsMatch && (
+                  <p style={{ fontSize: '12px', color: '#e53935', margin: '4px 0 0' }}>
+                    Passwords do not match.
+                  </p>
+                )}
+              </div>
+
+              {/* Membership notice */}
+              <div className="register-name-notice">
+                <span className="register-name-notice__icon">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#01A451" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <circle cx="12" cy="12" r="10"/>
+                    <line x1="12" y1="8" x2="12" y2="12"/>
+                    <line x1="12" y1="16" x2="12.01" y2="16"/>
+                  </svg>
+                </span>
+                <p className="register-name-notice__text">
+                  To activate your membership code, please make sure your full name matches exactly what is on your membership record.
+                </p>
               </div>
 
               <button type="submit" className="auth-btn" disabled={loading}>
@@ -178,26 +300,8 @@ function Register() {
               </button>
             </form>
 
-            <div className="auth-divider">
-  <span>or</span>
-</div>
-
-<button
-  type="button"
-  className="google-signin-btn"
-  onClick={handleGoogleSignIn}
->
-  <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
-    <path d="M17.64 9.2c0-.637-.057-1.251-.164-1.84H9v3.481h4.844c-.209 1.125-.843 2.078-1.796 2.717v2.258h2.908c1.702-1.566 2.684-3.874 2.684-6.615z" fill="#4285F4"/>
-    <path d="M9 18c2.43 0 4.467-.806 5.956-2.184l-2.908-2.258c-.806.54-1.837.86-3.048.86-2.344 0-4.328-1.584-5.036-3.711H.957v2.332C2.438 15.983 5.482 18 9 18z" fill="#34A853"/>
-    <path d="M3.964 10.707c-.18-.54-.282-1.117-.282-1.707s.102-1.167.282-1.707V4.961H.957C.347 6.175 0 7.55 0 9s.348 2.825.957 4.039l3.007-2.332z" fill="#FBBC05"/>
-    <path d="M9 3.58c1.321 0 2.508.454 3.44 1.345l2.582-2.58C13.463.891 11.426 0 9 0 5.482 0 2.438 2.017.957 4.961L3.964 7.293C4.672 5.166 6.656 3.58 9 3.58z" fill="#EA4335"/>
-  </svg>
-  Continue with Google
-</button>
-
             <p className="auth-switch">
-              Already a member? <Link to="/login">Sign In</Link>
+              Already have an account? <Link to="/login">Sign In</Link>
             </p>
           </div>
         </div>

@@ -40,7 +40,7 @@ export function AuthProvider({ children }) {
     setLoading(false)
   }
 
-  async function register({ fullName, email, password, phone, memberCode }) {
+  async function register({ fullName, email, password, phone }) {
     const { data, error } = await supabase.auth.signUp({
       email,
       password,
@@ -50,58 +50,6 @@ export function AuthProvider({ children }) {
     })
 
     if (error) return { error }
-
-    // Wait for trigger to create profile row
-    await new Promise(resolve => setTimeout(resolve, 1000))
-
-    const updates = { phone }
-
-    if (memberCode) {
-      const codeRegex = /^NG\d{8}$/
-      if (codeRegex.test(memberCode)) {
-        const { data: codeData } = await supabase
-          .from('membership_codes')
-          .select('*')
-          .eq('code', memberCode)
-          .eq('is_active', true)
-          .single()
-
-        if (codeData) {
-          const now = new Date()
-          const expiresAt = new Date(codeData.expires_at)
-
-          if (now <= expiresAt) {
-            updates.role = 'member'
-            updates.member_code = memberCode
-            updates.member_status = 'approved'
-
-            await supabase.from('admin_notifications').insert({
-              type: 'new_member',
-              message: `New member registered: ${fullName} (${email}) using code ${memberCode}.`,
-              is_read: false,
-            })
-          } else {
-            await supabase.from('admin_notifications').insert({
-              type: 'code_expired',
-              message: `User ${fullName} (${email}) tried expired code ${memberCode} during registration.`,
-              is_read: false,
-            })
-          }
-        } else {
-          await supabase.from('admin_notifications').insert({
-            type: 'code_not_found',
-            message: `User ${fullName} (${email}) tried unrecognised code ${memberCode} during registration.`,
-            is_read: false,
-          })
-        }
-      }
-    }
-
-    await supabase
-      .from('profiles')
-      .update(updates)
-      .eq('id', data.user.id)
-
     return { data }
   }
 
@@ -114,15 +62,15 @@ export function AuthProvider({ children }) {
     return { data }
   }
 
-  async function signInWithGoogle() {
-  const { error } = await supabase.auth.signInWithOAuth({
-    provider: 'google',
-    options: {
-      redirectTo: `${window.location.origin}/auth/callback`,
-    },
-  })
-  if (error) throw error
-}
+  async function googleLogin() {
+    const { error } = await supabase.auth.signInWithOAuth({
+      provider: 'google',
+      options: {
+        redirectTo: `${window.location.origin}/auth/callback`,
+      },
+    })
+    if (error) return { error }
+  }
 
   async function logout() {
     const { error } = await supabase.auth.signOut()
@@ -151,8 +99,8 @@ export function AuthProvider({ children }) {
       isMember,
       isPendingMember,
       register,
-      signInWithGoogle,
       login,
+      googleLogin,
       logout,
       forgotPassword,
       fetchProfile
