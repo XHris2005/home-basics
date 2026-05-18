@@ -1,9 +1,10 @@
 import { useState, useRef, useEffect } from 'react'
-import { Link, useNavigate } from 'react-router-dom'
 import { useAuth } from '../../hooks/useAuth'
 import logo from "../../assets/logo.png";
 import { useCart } from '../../hooks/useCart'
+import { Link, useNavigate, useLocation } from 'react-router-dom'
 import './Navbar.css'
+
 
 const categoryData = [
   { name: 'Personal Care & Hygiene', subcategories: ['Toothpaste & Brushes', 'Feminine Hygiene', 'Cotton & Swabs', 'Hand Sanitizers'] },
@@ -15,6 +16,8 @@ const categoryData = [
 ]
 
 function Navbar() {
+  const location = useLocation()
+  const isAuthPage = ['/login', '/register', '/forgot-password', '/reset-password', '/register-success'].includes(location.pathname)
   const { user, profile, logout } = useAuth()
   const { totalItems } = useCart()
   const navigate = useNavigate()
@@ -26,6 +29,7 @@ function Navbar() {
   const [showSearch, setShowSearch] = useState(false)
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
   const [mobileExpandedCat, setMobileExpandedCat] = useState(null)
+
   const searchRef = useRef(null)
   const categoryRef = useRef(null)
   const userMenuRef = useRef(null)
@@ -106,146 +110,161 @@ function Navbar() {
   return (
     <>
       <nav className="navbar">
-        <div className="navbar-inner">
+  <div className="navbar-inner">
 
-          {/* Logo */}
-          <Link to="/" className="navbar-logo">
-            <img src={logo} alt="Home Basics" className="logo-img" />
-          </Link>
+    {/* Logo — always visible */}
+    <Link to="/" className="navbar-logo">
+      <img src={logo} alt="Home Basics" className="logo-img" />
+    </Link>
 
-          {/* Categories Dropdown — desktop */}
-          <div className="nav-dropdown desktop-only" ref={categoryRef}>
-            <button className="nav-link" onClick={() => { setShowCategories(!showCategories); setShowUserMenu(false) }}>
-              Categories
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"
-                style={{ transform: showCategories ? 'rotate(180deg)' : 'rotate(0)', transition: 'transform 0.2s' }}>
-                <polyline points="6 9 12 15 18 9"/>
-              </svg>
-            </button>
-            {showCategories && (
-              <div className="categories-dropdown">
-                <div className="cat-left">
-                  <p className="cat-all-label">All Categories</p>
-                  {categoryData.map(cat => (
-                    <button key={cat.name}
-                      className={`cat-item ${activeCategory.name === cat.name ? 'active' : ''}`}
-                      onMouseEnter={() => setActiveCategory(cat)}
-                      onClick={() => { navigate(`/shop?category=${encodeURIComponent(cat.name)}`); setShowCategories(false) }}
-                    >
-                      {cat.name}
-                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                        <polyline points="9 18 15 12 9 6"/>
-                      </svg>
-                    </button>
-                  ))}
-                </div>
-                <div className="cat-right">
-                  <p className="cat-right-title">{activeCategory.name}</p>
-                  <div className="cat-subcategories">
-                    {activeCategory.subcategories.map(sub => (
-                      <div key={sub} className="cat-sub-col">
-                        <Link to={`/shop?category=${encodeURIComponent(sub)}`} className="cat-sub-link" onClick={() => setShowCategories(false)}>
-                          {sub}
-                        </Link>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              </div>
-            )}
-          </div>
-
-          <Link to="/become-member" className="nav-link desktop-only">Membership</Link>
-
-          {/* Search — desktop */}
-          <div className="navbar-search-wrapper desktop-only" ref={searchRef}>
-            <form className="navbar-search" onSubmit={handleSearch}>
-              <svg className="search-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
-              </svg>
-              <input type="text" placeholder="What are you shopping for today?" value={searchQuery} onChange={handleSearchChange} />
-            </form>
-            {showSearch && searchSuggestions.length > 0 && (
-              <div className="search-dropdown">
-                {searchSuggestions.map((s, i) => (
-                  <button key={i} className="search-suggestion" onClick={() => handleSuggestionClick(s)}>
+    {/* Only show full navbar on non-auth pages */}
+    {!isAuthPage && (
+      <>
+        {/* Categories Dropdown — desktop */}
+        <div className="nav-dropdown desktop-only" ref={categoryRef}>
+          <button className="nav-link" onClick={() => { setShowCategories(!showCategories); setShowUserMenu(false) }}>
+            Categories
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"
+              style={{ transform: showCategories ? 'rotate(180deg)' : 'rotate(0)', transition: 'transform 0.2s' }}>
+              <polyline points="6 9 12 15 18 9"/>
+            </svg>
+          </button>
+          {showCategories && (
+            <div className="categories-dropdown">
+              <div className="cat-left">
+                <p className="cat-all-label">All Categories</p>
+                {categoryData.map(cat => (
+                  <button key={cat.name}
+                    className={`cat-item ${activeCategory.name === cat.name ? 'active' : ''}`}
+                    onMouseEnter={() => setActiveCategory(cat)}
+                    onClick={() => { navigate(`/shop?category=${encodeURIComponent(cat.name)}`); setShowCategories(false) }}
+                  >
+                    {cat.name}
                     <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                      <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
+                      <polyline points="9 18 15 12 9 6"/>
                     </svg>
-                    <span>{highlightMatch(s, searchQuery)}</span>
                   </button>
                 ))}
               </div>
+              <div className="cat-right">
+                <p className="cat-right-title">{activeCategory.name}</p>
+                <div className="cat-subcategories">
+                  {activeCategory.subcategories.map(sub => (
+                    <div key={sub} className="cat-sub-col">
+                      <Link to={`/shop?category=${encodeURIComponent(sub)}`} className="cat-sub-link" onClick={() => setShowCategories(false)}>
+                        {sub}
+                      </Link>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+          )}
+        </div>
+
+        <Link to="/become-member" className="nav-link desktop-only">Membership</Link>
+
+        {/* Search — desktop */}
+        <div className="navbar-search-wrapper desktop-only" ref={searchRef}>
+          <form className="navbar-search" onSubmit={handleSearch}>
+            <svg className="search-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+              <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
+            </svg>
+            <input type="text" placeholder="What are you shopping for today?" value={searchQuery} onChange={handleSearchChange} />
+          </form>
+          {showSearch && searchSuggestions.length > 0 && (
+            <div className="search-dropdown">
+              {searchSuggestions.map((s, i) => (
+                <button key={i} className="search-suggestion" onClick={() => handleSuggestionClick(s)}>
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                    <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
+                  </svg>
+                  <span>{highlightMatch(s, searchQuery)}</span>
+                </button>
+              ))}
+            </div>
+          )}
+        </div>
+
+        {/* Right Icons */}
+        <div className="navbar-right" style={{ marginLeft: 'auto' }}>
+          {/* User — desktop */}
+          <div className="nav-icon-btn desktop-only" ref={userMenuRef} onClick={() => { setShowUserMenu(!showUserMenu); setShowCategories(false) }}>
+            {user ? (
+              <div className="user-avatar">
+                {profile?.full_name ? profile.full_name.charAt(0).toUpperCase() : user.email.charAt(0).toUpperCase()}
+              </div>
+            ) : (
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/>
+              </svg>
+            )}
+            {showUserMenu && (
+              <div className="dropdown-menu user-menu" onClick={e => e.stopPropagation()}>
+                {user ? (
+                  <>
+                    <div className="user-menu-name">{profile?.full_name || 'My Account'}</div>
+                    <Link to="/account" className="dropdown-item" onClick={() => setShowUserMenu(false)}>My Account</Link>
+                    <Link to="/account?tab=orders" className="dropdown-item" onClick={() => setShowUserMenu(false)}>My Orders</Link>
+                    {profile?.role === 'admin' && (
+                      <Link to="/admin" className="dropdown-item" onClick={() => setShowUserMenu(false)}>Admin Dashboard</Link>
+                    )}
+                    <button className="dropdown-item logout-btn" onClick={handleLogout}>Sign Out</button>
+                  </>
+                ) : (
+                  <>
+                    <Link to="/login" className="dropdown-item" onClick={() => setShowUserMenu(false)}>Sign In</Link>
+                    <Link to="/register" className="dropdown-item" onClick={() => setShowUserMenu(false)}>Create Account</Link>
+                  </>
+                )}
+              </div>
             )}
           </div>
 
-          {/* Right Icons */}
-          <div className="navbar-right">
-
-            {/* User — desktop */}
-            <div className="nav-icon-btn desktop-only" ref={userMenuRef} onClick={() => { setShowUserMenu(!showUserMenu); setShowCategories(false) }}>
-              {user ? (
-                <div className="user-avatar">
-                  {profile?.full_name ? profile.full_name.charAt(0).toUpperCase() : user.email.charAt(0).toUpperCase()}
-                </div>
-              ) : (
-                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                  <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/>
-                </svg>
-              )}
-              {showUserMenu && (
-                <div className="dropdown-menu user-menu" onClick={e => e.stopPropagation()}>
-                  {user ? (
-                    <>
-                      <div className="user-menu-name">{profile?.full_name || 'My Account'}</div>
-                      <Link to="/account" className="dropdown-item" onClick={() => setShowUserMenu(false)}>My Account</Link>
-                      <Link to="/account?tab=orders" className="dropdown-item" onClick={() => setShowUserMenu(false)}>My Orders</Link>
-                      {profile?.role === 'admin' && (
-                        <Link to="/admin" className="dropdown-item" onClick={() => setShowUserMenu(false)}>Admin Dashboard</Link>
-                      )}
-                      <button className="dropdown-item logout-btn" onClick={handleLogout}>Sign Out</button>
-                    </>
-                  ) : (
-                    <>
-                      <Link to="/login" className="dropdown-item" onClick={() => setShowUserMenu(false)}>Sign In</Link>
-                      <Link to="/register" className="dropdown-item" onClick={() => setShowUserMenu(false)}>Create Account</Link>
-                    </>
-                  )}
-                </div>
-              )}
-            </div>
-
-            {/* User icon — mobile only (no dropdown, goes to account or login) */}
-            <div className="nav-icon-btn mobile-only" onClick={() => navigate(user ? '/account' : '/login')}>
-              {user ? (
-                <div className="user-avatar">
-                  {profile?.full_name ? profile.full_name.charAt(0).toUpperCase() : user.email.charAt(0).toUpperCase()}
-                </div>
-              ) : (
-                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                  <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/>
-                </svg>
-              )}
-            </div>
-
-            {/* Cart */}
-            <Link to="/cart" className="nav-icon-btn cart-btn">
+          {/* User icon — mobile only */}
+          <div className="nav-icon-btn mobile-only" onClick={() => navigate(user ? '/account' : '/login')}>
+            {user ? (
+              <div className="user-avatar">
+                {profile?.full_name ? profile.full_name.charAt(0).toUpperCase() : user.email.charAt(0).toUpperCase()}
+              </div>
+            ) : (
               <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/>
-                <line x1="3" y1="6" x2="21" y2="6"/>
-                <path d="M16 10a4 4 0 0 1-8 0"/>
+                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/>
               </svg>
-              {totalItems > 0 && <span className="cart-count">{totalItems}</span>}
-            </Link>
-
-            {/* Hamburger — mobile only */}
-            <button className="hamburger-btn mobile-only" onClick={() => setMobileMenuOpen(true)}>
-              <span /><span /><span />
-            </button>
-
+            )}
           </div>
+
+          {/* Cart */}
+          <Link to="/cart" className="nav-icon-btn cart-btn">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+              <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/>
+              <line x1="3" y1="6" x2="21" y2="6"/>
+              <path d="M16 10a4 4 0 0 1-8 0"/>
+            </svg>
+            {totalItems > 0 && <span className="cart-count">{totalItems}</span>}
+          </Link>
+
+          {/* Hamburger — mobile only */}
+          <button className="hamburger-btn mobile-only" onClick={() => setMobileMenuOpen(true)}>
+            <span /><span /><span />
+          </button>
         </div>
-      </nav>
+      </>
+    )}
+
+    {/* Auth page right side — just sign in / register links */}
+    {isAuthPage && (
+      <div className="navbar-right">
+        {location.pathname === '/register' ? (
+          <Link to="/login" className="auth-nav-link">Sign In</Link>
+        ) : location.pathname === '/login' ? (
+          <Link to="/register" className="auth-nav-link">Create Account</Link>
+        ) : null}
+      </div>
+    )}
+
+  </div>
+</nav>
 
       {/* Mobile Drawer */}
       {mobileMenuOpen && (
