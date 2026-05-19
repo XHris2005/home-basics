@@ -73,16 +73,14 @@ function Footer() {
             </p>
           </div>
           <div className="footer-col">
-            <p className="footer-col-title">Categories</p>
-            <Link to="/shop?category=Body+Care+%26+Beauty" className="footer-link">Body Care & Beauty</Link>
-            <Link to="/shop?category=Personal+Care+%26+Hygiene" className="footer-link">Personal Care & Hygiene</Link>
-            <Link to="/shop?category=Hair+Care" className="footer-link">Hair Care</Link>
-            <Link to="/shop?category=Home+Care+%26+Cleaning" className="footer-link">Home Care & Cleaning</Link>
-            <Link to="/shop?category=Fragrance+%26+Sprays" className="footer-link">Fragrance & Sprays</Link>
-            <Link to="/shop?category=Beverages+%26+Edibles" className="footer-link">Beverages & Edibles</Link>
-            <Link to="/shop?category=Home+Essentials" className="footer-link">Home Essentials</Link>
-            <Link to="/shop?category=Orekelewa+Products" className="footer-link">Orekelewa Products</Link>
-          </div>
+  <p className="footer-col-title">Categories</p>
+  <Link to="/shop?category=Personal+Care+%26+Hygiene" className="footer-link">Personal Care & Hygiene</Link>
+  <Link to="/shop?category=Skincare" className="footer-link">Skincare</Link>
+  <Link to="/shop?category=Baby+Care" className="footer-link">Baby Care</Link>
+  <Link to="/shop?category=Tea+%26+Beverages" className="footer-link">Tea & Beverages</Link>
+  <Link to="/shop?category=Snacks+%26+Food" className="footer-link">Snacks & Food</Link>
+  <Link to="/shop?category=Supplements" className="footer-link">Supplements</Link>
+</div>
           <div className="footer-col">
             <p className="footer-col-title">Contact</p>
             <span className="footer-link">Call Us</span>
@@ -103,7 +101,7 @@ function Footer() {
             <p className="footer-col-title">Company</p>
             <span className="footer-link">About Homebasics</span>
             <Link to="/become-member" className="footer-link">Membership</Link>
-            <span className="footer-link">Privacy Policy</span>
+            <Link to="/privacy" className="footer-link">Privacy Policy</Link>
           </div>
         </div>
         <div className="footer-bottom">

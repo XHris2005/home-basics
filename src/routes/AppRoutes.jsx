@@ -29,6 +29,7 @@ import Settings from '../pages/admin/Settings/Settings'
 import AuthCallback from '../pages/AuthCallback/AuthCallback'
 import RegisterSuccess from '../pages/RegisterSuccess/RegisterSuccess'
 import ResetPassword from '../pages/ResetPassword/ResetPassword'
+import Privacy from '../pages/Privacy/Privacy'
 
 function AppRoutes() {
   return (
@@ -45,6 +46,7 @@ function AppRoutes() {
       <Route path="/become-member" element={<BecomeMember />} />
       <Route path="/forgot-password" element={<ForgotPassword />} />
       <Route path="/auth/callback" element={<AuthCallback />} />
+      <Route path="/privacy" element={<Privacy />} />
 
       {/* Protected - logged in users */}
       <Route element={<ProtectedRoute />}>
