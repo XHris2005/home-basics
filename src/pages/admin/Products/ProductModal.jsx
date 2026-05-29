@@ -12,6 +12,7 @@ function ProductModal({ product, onClose, onSaved }) {
     is_member_product: false, images: []
   })
   const [imageUrls, setImageUrls] = useState([''])
+  const [uploading, setUploading] = useState(false)
 
   useEffect(() => {
     supabase.from('categories').select('id, name').then(({ data }) => setCategories(data || []))
@@ -33,6 +34,31 @@ function ProductModal({ product, onClose, onSaved }) {
       setImageUrls(product.images?.length ? product.images : [''])
     }
   }, [product])
+
+  async function handleImageUpload(e, index) {
+  const file = e.target.files[0]
+  if (!file) return
+  setUploading(true)
+  const data = new FormData()
+  data.append('file', file)
+  data.append('upload_preset', 'homebasics_products')
+  data.append('cloud_name', 'db2a43rey')
+  try {
+    const res = await fetch('https://api.cloudinary.com/v1_1/db2a43rey/image/upload', {
+      method: 'POST',
+      body: data
+    })
+    const json = await res.json()
+    if (json.secure_url) {
+      const updated = [...imageUrls]
+      updated[index] = json.secure_url
+      setImageUrls(updated)
+    }
+  } catch (err) {
+    console.error('Upload failed:', err)
+  }
+  setUploading(false)
+}
 
   function set(key, val) { setForm(prev => ({ ...prev, [key]: val })) }
 
@@ -160,32 +186,70 @@ function ProductModal({ product, onClose, onSaved }) {
           </div>
 
           {/* Images */}
-          <div className="modal-section-title" style={{ marginTop: '20px' }}>Image URLs (Cloudinary)</div>
-          {imageUrls.map((url, i) => (
-            <div key={i} className="modal-row" style={{ alignItems: 'center' }}>
-              <div className="modal-field" style={{ flex: 1 }}>
-                <input
-                  value={url}
-                  onChange={e => {
-                    const updated = [...imageUrls]
-                    updated[i] = e.target.value
-                    setImageUrls(updated)
-                  }}
-                  placeholder="https://res.cloudinary.com/..."
-                />
-              </div>
-              {imageUrls.length > 1 && (
-                <button className="admin-icon-btn danger" style={{ marginTop: '0', flexShrink: 0 }}
-                  onClick={() => setImageUrls(imageUrls.filter((_, idx) => idx !== i))}>
-                  ✕
-                </button>
-              )}
-            </div>
-          ))}
-          <button className="admin-btn-secondary" style={{ marginTop: '8px', fontSize: '13px' }}
-            onClick={() => setImageUrls([...imageUrls, ''])}>
-            + Add Image URL
-          </button>
+<div className="modal-section-title" style={{ marginTop: '20px' }}>Images</div>
+{imageUrls.map((url, i) => (
+  <div key={i} style={{ display: 'flex', gap: '8px', alignItems: 'flex-start', marginBottom: '10px' }}>
+    {/* Preview */}
+    <div style={{
+      width: '56px', height: '56px', borderRadius: '8px', border: '1px solid var(--color-border)',
+      background: '#fafafa', flexShrink: 0, overflow: 'hidden', display: 'flex',
+      alignItems: 'center', justifyContent: 'center'
+    }}>
+      {url ? (
+        <img src={url} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+      ) : (
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#ccc" strokeWidth="2">
+          <rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/>
+          <polyline points="21 15 16 10 5 21"/>
+        </svg>
+      )}
+    </div>
+
+    <div style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: '6px' }}>
+      {/* URL input */}
+      <input
+        className="modal-field input"
+        style={{ padding: '8px 12px', border: '1px solid var(--color-border)', borderRadius: '8px', fontSize: '13px', fontFamily: 'inherit', color: 'var(--color-text)', outline: 'none' }}
+        value={url}
+        onChange={e => {
+          const updated = [...imageUrls]
+          updated[i] = e.target.value
+          setImageUrls(updated)
+        }}
+        placeholder="https://res.cloudinary.com/..."
+      />
+      {/* Upload button */}
+      <label style={{
+        display: 'inline-flex', alignItems: 'center', gap: '6px', cursor: 'pointer',
+        fontSize: '12px', color: 'var(--color-primary)', fontWeight: 600
+      }}>
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+          <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+          <polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/>
+        </svg>
+        {uploading ? 'Uploading...' : 'Upload image'}
+        <input
+          type="file"
+          accept="image/*"
+          style={{ display: 'none' }}
+          disabled={uploading}
+          onChange={e => handleImageUpload(e, i)}
+        />
+      </label>
+    </div>
+
+    {imageUrls.length > 1 && (
+      <button className="admin-icon-btn danger" style={{ flexShrink: 0 }}
+        onClick={() => setImageUrls(imageUrls.filter((_, idx) => idx !== i))}>
+        ✕
+      </button>
+    )}
+  </div>
+))}
+<button className="admin-btn-secondary" style={{ marginTop: '4px', fontSize: '13px' }}
+  onClick={() => setImageUrls([...imageUrls, ''])}>
+  + Add Image
+</button>
         </div>
 
         <div className="admin-modal-footer">

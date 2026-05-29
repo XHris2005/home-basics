@@ -553,6 +553,16 @@
   color: var(--color-primary);
 }
 
+.pd-qty-btn:active {
+  background: var(--color-primary);
+  color: white;
+}
+
+.pd-add-cart-btn:active {
+  background: white;
+  color: var(--color-primary);
+  border: 2px solid var(--color-primary);
+}
 /* Responsive */
 @media (max-width: 1024px) {
   .pd-layout { grid-template-columns: 1fr; }
