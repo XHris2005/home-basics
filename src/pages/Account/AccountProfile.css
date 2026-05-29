@@ -143,3 +143,14 @@
   opacity: 0.6;
   cursor: not-allowed;
 }
+@media (max-width: 768px) {
+  .account-profile__card {
+    border-radius: 12px;
+    padding: 16px;
+  }
+
+  .account-profile__btn {
+    align-self: stretch;
+    text-align: center;
+  }
+}

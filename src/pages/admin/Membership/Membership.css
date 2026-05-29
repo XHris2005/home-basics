@@ -1,52 +1,102 @@
 .membership-tabs {
   display: flex;
-  gap: 4px;
+  gap: 8px;
   margin-bottom: 20px;
   border-bottom: 2px solid var(--color-border);
+  padding-bottom: 0;
 }
 
 .membership-tab {
   display: flex;
   align-items: center;
   gap: 6px;
-  padding: 10px 20px;
+  padding: 8px 16px;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--color-text-muted);
   background: none;
   border: none;
-  font-size: 14px;
-  font-weight: 500;
-  font-family: var(--font-base);
-  color: var(--color-text-muted);
-  cursor: pointer;
   border-bottom: 2px solid transparent;
   margin-bottom: -2px;
-  transition: all 0.15s;
+  cursor: pointer;
+  transition: color 0.15s, border-color 0.15s;
 }
 
-.membership-tab:hover { color: var(--color-text); }
+.membership-tab:hover {
+  color: var(--color-text);
+}
 
 .membership-tab.active {
   color: var(--color-primary);
-  font-weight: 600;
   border-bottom-color: var(--color-primary);
 }
 
-.membership-tab-badge {
-  background: #ca8a04;
-  color: white;
+.membership-tab.active .membership-tab-count {
+  background: #f0fdf4;
+  color: var(--color-primary);
+  border-color: #bbf7d0;
+}
+.membership-tab-count {
+  background: var(--color-background);
+  color: var(--color-text-muted);
   font-size: 11px;
   font-weight: 700;
   padding: 2px 7px;
   border-radius: 999px;
+  border: 1px solid var(--color-border);
 }
 
-.code-chip {
-  display: inline-block;
-  background: #f0fdf4;
-  color: var(--color-primary);
-  border: 1px solid #bbf7d0;
-  border-radius: 6px;
-  font-size: 12px;
+.membership-add-form {
+  background: var(--color-background);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  padding: var(--spacing-md);
+  margin-bottom: 20px;
+}
+
+.membership-add-title {
+  font-size: 14px;
   font-weight: 700;
-  padding: 3px 10px;
-  letter-spacing: 0.04em;
+  color: var(--color-text);
+  margin-bottom: var(--spacing-sm);
+}
+
+.membership-form-row {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+.membership-form-error {
+  font-size: 13px;
+  color: var(--color-error);
+  margin-bottom: 8px;
+}
+
+.membership-form-success {
+  font-size: 13px;
+  color: var(--color-primary);
+  margin-bottom: 8px;
+}
+
+.admin-input {
+  padding: 8px 12px;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  font-size: 14px;
+  font-family: var(--font-base);
+  color: var(--color-text);
+  background: var(--color-surface);
+  outline: none;
+  min-width: 180px;
+}
+
+.admin-input:focus {
+  border-color: var(--color-primary);
+}
+.membership-tab-count--pending {
+  background: #fff7ed;
+  color: #ea580c;
+  border-color: #fed7aa;
 }

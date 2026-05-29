@@ -53,6 +53,7 @@ function Home() {
   setFeaturedProducts(featured)
   setDealsProducts(deals)
   setAllProducts(all)
+  console.log('All products loaded:', all.length)
   setLoading(false)
 }
     loadProducts()
@@ -62,14 +63,20 @@ function Home() {
   if (allProducts.length === 0) return
 
   function pickRandom() {
-  const shuffled = [...allProducts].sort(() => Math.random() - 0.5)
-  // Each card gets a unique product by taking one from each position
-  setCardProducts([
-    shuffled[0] || null,
-    shuffled[1] || null,
-    shuffled[2] || null,
-    shuffled[3] || null,
-  ])
+  const withImages = allProducts.filter(p => p.images?.[0])
+  if (withImages.length < 4) return
+
+  // Fisher-Yates proper shuffle
+  const arr = [...withImages]
+  for (let i = arr.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [arr[i], arr[j]] = [arr[j], arr[i]]
+  }
+
+  // Take first 4 — guaranteed unique since we shuffled in place
+   const picked = arr.slice(0, 4)
+  console.log('Picked cards:', picked.map(p => ({ id: p.id, name: p.name })))
+  setCardProducts(picked)
 }
 
   pickRandom()
@@ -122,7 +129,7 @@ function Home() {
         <div className="flip-card-inner">
           <div className="flip-card-front">
   <img src={cardProducts[1]?.images?.[0]} className="flip-front-img-actual" alt="" />
-  <p className="flip-front-name">{cardProducts[0]?.name}</p>
+  <p className="flip-front-name">{cardProducts[1]?.name}</p>
   <span className="flip-front-stars">★★★★★</span>
 </div>
           <div className="flip-card-back">
@@ -140,7 +147,7 @@ function Home() {
         <div className="flip-card-inner">
           <div className="flip-card-front">
   <img src={cardProducts[2]?.images?.[0]} className="flip-front-img-actual" alt="" />
-  <p className="flip-front-name">{cardProducts[0]?.name}</p>
+  <p className="flip-front-name">{cardProducts[2]?.name}</p>
   <span className="flip-front-stars">★★★★★</span>
 </div>
           <div className="flip-card-back">
@@ -158,7 +165,7 @@ function Home() {
         <div className="flip-card-inner">
           <div className="flip-card-front">
   <img src={cardProducts[3]?.images?.[0]} className="flip-front-img-actual" alt="" />
-  <p className="flip-front-name">{cardProducts[0]?.name}</p>
+  <p className="flip-front-name">{cardProducts[3]?.name}</p>
   <span className="flip-front-stars">★★★★★</span>
 </div>
           <div className="flip-card-back">

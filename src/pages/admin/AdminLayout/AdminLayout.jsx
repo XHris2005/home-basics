@@ -1,6 +1,7 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { NavLink, useNavigate } from 'react-router-dom'
 import { useAuth } from '../../../hooks/useAuth'
+import { supabase } from '../../../services/supabase'
 import logo from '../../../assets/logo.png'
 import './AdminLayout.css'
 
@@ -62,28 +63,49 @@ function AdminLayout({ children }) {
   const { user, profile, logout } = useAuth()
   const navigate = useNavigate()
   const [drawerOpen, setDrawerOpen] = useState(false)
+  const [notifCount, setNotifCount] = useState(0)
 
+useEffect(() => {
+  async function fetchNotifCount() {
+    const { count } = await supabase
+      .from('admin_notifications')
+      .select('*', { count: 'exact', head: true })
+      .eq('is_read', false)
+    setNotifCount(count || 0)
+  }
+  fetchNotifCount()
+  const interval = setInterval(fetchNotifCount, 30000)
+  function handleClear() { setNotifCount(0) }
+  window.addEventListener('notifs-cleared', handleClear)
+  return () => {
+    clearInterval(interval)
+    window.removeEventListener('notifs-cleared', handleClear)
+  }
+}, [])
   async function handleLogout() {
     await logout()
     navigate('/login')
   }
 
   const NavItems = ({ onNav }) => (
-    <>
-      {NAV_ITEMS.map(item => (
-        <NavLink
-          key={item.path}
-          to={item.path}
-          end={item.path === '/admin'}
-          className={({ isActive }) => `admin-nav-item ${isActive ? 'active' : ''}`}
-          onClick={onNav}
-        >
-          {item.icon}
-          <span>{item.label}</span>
-        </NavLink>
-      ))}
-    </>
-  )
+  <>
+    {NAV_ITEMS.map(item => (
+      <NavLink
+        key={item.path}
+        to={item.path}
+        end={item.path === '/admin'}
+        className={({ isActive }) => `admin-nav-item ${isActive ? 'active' : ''}`}
+        onClick={onNav}
+      >
+        {item.icon}
+        <span>{item.label}</span>
+        {item.path === '/admin/membership' && notifCount > 0 && (
+          <span className="admin-nav-badge">{notifCount > 99 ? '99+' : notifCount}</span>
+        )}
+      </NavLink>
+    ))}
+  </>
+)
 
   return (
     <div className="admin-shell">

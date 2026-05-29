@@ -44,13 +44,14 @@ function AccountMembership() {
 
     try {
       // Check code exists in database
-      const { data: codeData, error: codeError } = await supabase
-        .from('membership_codes')
-        .select('*')
-        .eq('code', code)
-        .eq('is_active', true)
-        .single()
-
+     const { data: codeData, error: codeError } = await supabase
+  .from('membership_codes')
+  .select('*')
+  .eq('code', code)
+  .maybeSingle()
+  
+  console.log('Code data:', codeData)
+console.log('Code error:', codeError)
       if (codeError || !codeData) {
         await supabase.from('admin_notifications').insert({
           type: 'code_not_found',
