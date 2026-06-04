@@ -563,7 +563,88 @@
   color: var(--color-primary);
   border: 2px solid var(--color-primary);
 }
+
+.pd-variant-group {
+  margin-bottom: 14px;
+}
+
+.pd-variant-selected {
+  color: var(--color-primary);
+  font-weight: 600;
+}
+
+.pd-variant-prompt {
+  font-size: 13px;
+  color: var(--color-text-muted);
+  font-style: italic;
+  margin-top: 4px;
+}
 /* Responsive */
 @media (max-width: 1024px) {
   .pd-layout { grid-template-columns: 1fr; }
+}
+@media (max-width: 768px) {
+  .pd-inner {
+    padding: 0 16px;
+  }
+
+  .pd-breadcrumb {
+    margin-bottom: 16px;
+    font-size: 12px;
+  }
+
+  .pd-top-row {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+
+  .pd-bottom-row {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+
+  .pd-main-image {
+    height: 280px;
+  }
+
+  .pd-info-card {
+    padding: 16px;
+  }
+
+  .pd-name {
+    font-size: 20px;
+  }
+
+  .pd-actions {
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .pd-quantity {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .pd-add-cart-btn {
+    width: 100%;
+  }
+
+  .pd-description-card,
+  .pd-rating-card,
+  .pd-delivery-card {
+    padding: 16px;
+  }
+
+  .pd-delivery-card {
+    position: static;
+    height: auto;
+  }
+
+  .pd-delivery-selects {
+    flex-direction: column;
+  }
+
+  .pd-layout {
+    margin-bottom: 40px;
+  }
 }

@@ -1,5 +1,6 @@
 import { Link, useNavigate } from 'react-router-dom'
 import { useAuth } from '../../hooks/useAuth'
+import { cloudinaryOptimize } from '../../utils/formatters'
 import './ProductCard.css'
 
 function formatPrice(price) {
@@ -10,9 +11,10 @@ function ProductCard({ product, isMember = false }) {
   const navigate = useNavigate()
   const { user } = useAuth()
   const hasVariants = product.variants && product.variants.length > 0
-  const displayPrice = hasVariants ? product.variants[0].retail_price : product.retail_price
-  const displayWholesale = hasVariants ? product.variants[0].wholesale_price : product.wholesale_price
-  const displayMember = hasVariants ? product.variants[0].member_price : product.member_price
+  const productVariants = product.product_variants || product.variants || []
+const displayPrice = hasVariants ? productVariants[0].retail_price : product.retail_price
+const displayWholesale = hasVariants ? productVariants[0].wholesale_price : product.wholesale_price
+const displayMember = hasVariants ? productVariants[0].member_price : product.member_price
   const showMemberPrice = product.is_member_product && displayMember
 
   function handleLoginClick(e) {
@@ -24,10 +26,14 @@ function ProductCard({ product, isMember = false }) {
   return (
     <Link to={`/shop/${product.slug}`} className="product-card">
       <div className="product-card-image">
-        {product.images && product.images.length > 0
-          ? <img src={product.images[0]} alt={product.name} />
-          : <div className="product-placeholder" />
-        }
+        {(() => {
+  const cardImage = hasVariants && productVariants[0]?.images?.length
+    ? productVariants[0].images[0]
+    : product.images?.[0]
+  return cardImage
+    ? <img src={cloudinaryOptimize(cardImage, 400)} alt={product.name} />
+    : <div className="product-placeholder" />
+})()}
       </div>
       <div className="product-card-body">
         {(product.is_member_product || product.categories) && (

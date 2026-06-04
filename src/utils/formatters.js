@@ -13,3 +13,8 @@ export function formatDate(dateString) {
     year: 'numeric',
   }).format(new Date(dateString))
 }
+
+export function cloudinaryOptimize(url, width = 600) {
+  if (!url || !url.includes('cloudinary.com')) return url
+  return url.replace('/upload/', `/upload/w_${width},f_auto,q_auto/`)
+}
