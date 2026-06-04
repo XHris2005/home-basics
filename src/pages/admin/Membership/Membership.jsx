@@ -58,27 +58,31 @@ const membersData = membersRes.data || []
 const pendingData = pendingRes.data || []
 
 // Enrich codes with used_by profile info
-const usedByIds = [...new Set(codesData.filter(c => c.used_by).map(c => c.used_by))]
+const usedByIds = [...new Set(codesData.filter(c => c.used_by && typeof c.used_by === 'string').map(c => c.used_by))]
 let usedProfiles = []
 if (usedByIds.length > 0) {
-  const { data } = await supabase
+  const { data, error } = await supabase
     .from('profiles')
     .select('id, full_name, email')
     .in('id', usedByIds)
-  usedProfiles = data || []
+  if (!error) usedProfiles = data || []
 }
 
 const profileMap = {}
 usedProfiles.forEach(p => { profileMap[p.id] = p })
 // Enrich pending profiles with bearer_name from their submitted code
-const pendingCodes = pendingData.map(p => p.member_code).filter(Boolean)
+const pendingCodes = [...new Set(
+  pendingData
+    .map(p => p.member_code)
+    .filter(c => typeof c === 'string' && c.trim().length > 0)
+)]
 let codeDetails = []
 if (pendingCodes.length > 0) {
-  const { data } = await supabase
+  const { data, error } = await supabase
     .from('membership_codes')
     .select('code, bearer_name')
     .in('code', pendingCodes)
-  codeDetails = data || []
+  if (!error) codeDetails = data || []
 }
 const codeDetailMap = {}
 codeDetails.forEach(c => { codeDetailMap[c.code] = c })

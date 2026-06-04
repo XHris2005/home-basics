@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom'
 import { useAuth } from '../../hooks/useAuth'
 import { getFeaturedProducts, getOrekelwaDeals, getAllProducts } from '../../services/products'
 import ProductCard from '../../components/ProductCard/ProductCard'
+import { cloudinaryOptimize } from '../../utils/formatters'
 import crown from "../../assets/crown.png";
 import './Home.css'
 
@@ -53,7 +54,6 @@ function Home() {
   setFeaturedProducts(featured)
   setDealsProducts(deals)
   setAllProducts(all)
-  console.log('All products loaded:', all.length)
   setLoading(false)
 }
     loadProducts()
@@ -75,7 +75,6 @@ function Home() {
 
   // Take first 4 — guaranteed unique since we shuffled in place
    const picked = arr.slice(0, 4)
-  console.log('Picked cards:', picked.map(p => ({ id: p.id, name: p.name })))
   setCardProducts(picked)
 }
 
@@ -110,7 +109,7 @@ function Home() {
       <div className="flip-card" style={{ '--delay': '0s' }}>
         <div className="flip-card-inner">
           <div className="flip-card-front">
-  <img src={cardProducts[0]?.images?.[0]} className="flip-front-img-actual" alt="" />
+  <img src={cloudinaryOptimize(cardProducts[0]?.images?.[0], 300)} className="flip-front-img-actual" alt="" />
   <p className="flip-front-name">{cardProducts[0]?.name}</p>
   <span className="flip-front-stars">★★★★★</span>
 </div>
@@ -128,7 +127,7 @@ function Home() {
       <div className="flip-card" style={{ '--delay': '1.5s' }}>
         <div className="flip-card-inner">
           <div className="flip-card-front">
-  <img src={cardProducts[1]?.images?.[0]} className="flip-front-img-actual" alt="" />
+  <img src={cloudinaryOptimize(cardProducts[1]?.images?.[0], 300)} className="flip-front-img-actual" alt="" />
   <p className="flip-front-name">{cardProducts[1]?.name}</p>
   <span className="flip-front-stars">★★★★★</span>
 </div>
@@ -146,7 +145,7 @@ function Home() {
       <div className="flip-card" style={{ '--delay': '3s' }}>
         <div className="flip-card-inner">
           <div className="flip-card-front">
-  <img src={cardProducts[2]?.images?.[0]} className="flip-front-img-actual" alt="" />
+  <img src={cloudinaryOptimize(cardProducts[2]?.images?.[0], 300)} className="flip-front-img-actual" alt="" />
   <p className="flip-front-name">{cardProducts[2]?.name}</p>
   <span className="flip-front-stars">★★★★★</span>
 </div>
@@ -164,7 +163,7 @@ function Home() {
       <div className="flip-card" style={{ '--delay': '4.5s' }}>
         <div className="flip-card-inner">
           <div className="flip-card-front">
-  <img src={cardProducts[3]?.images?.[0]} className="flip-front-img-actual" alt="" />
+  <img src={cloudinaryOptimize(cardProducts[3]?.images?.[0], 300)} className="flip-front-img-actual" alt="" />
   <p className="flip-front-name">{cardProducts[3]?.name}</p>
   <span className="flip-front-stars">★★★★★</span>
 </div>
@@ -248,13 +247,13 @@ function Home() {
       <div className="wholesale-banner-right">
         <div className="wholesale-overlap-stack">
           <div className="wholesale-overlap-img wholesale-overlap-img--back">
-            <img src="https://res.cloudinary.com/db2a43rey/image/upload/v1777816636/1777735906221_i9q18v.jpg" alt="Shea Butter" />
+            <img src={cloudinaryOptimize("https://res.cloudinary.com/db2a43rey/image/upload/v1777816636/1777735906221_i9q18v.jpg", 300)} alt="Shea Butter" />
           </div>
           <div className="wholesale-overlap-img wholesale-overlap-img--mid">
-            <img src="https://res.cloudinary.com/db2a43rey/image/upload/v1777816648/enhanced_product_hv213t.png" alt="Deluxe Shea Butter" />
+            <img src={cloudinaryOptimize("https://res.cloudinary.com/db2a43rey/image/upload/v1777816648/enhanced_product_hv213t.png", 300)} alt="Deluxe Shea Butter" />
           </div>
           <div className="wholesale-overlap-img wholesale-overlap-img--front">
-            <img src="https://res.cloudinary.com/db2a43rey/image/upload/v1777816491/1777673684456_avgyk5.png" alt="Face Scrub" />
+            <img src={cloudinaryOptimize("https://res.cloudinary.com/db2a43rey/image/upload/v1777816491/1777673684456_avgyk5.png", 300)} alt="Face Scrub" />
           </div>
         </div>
       </div>

@@ -128,6 +128,36 @@ function Shop() {
       )
     }
 
+    // Size filter
+// Size filter — uses real variant data + product weight/size field
+if (selectedSizes.length > 0) {
+  filtered = filtered.filter(p => {
+    const variants = p.product_variants || []
+    const sizeText = variants.map(v => v.size || '').join(' ').toLowerCase()
+
+    return selectedSizes.some(range => {
+      if (range === '50g – 200g') {
+        return /\b([5-9]\d|1\d{2}|200)g\b/.test(sizeText)
+      }
+      if (range === '250g – 500g') {
+        return /\b(2[5-9]\d|[3-4]\d{2}|500)g\b/.test(sizeText)
+      }
+      if (range === '1kg+') {
+        return /\b\d+kg\b/.test(sizeText) || /\b(1[2-9]\d{2}|[2-9]\d{3,})g\b/.test(sizeText)
+      }
+      if (range === '100ml – 250ml') {
+        return /\b(1\d{2}|2[0-4]\d|250)ml\b/.test(sizeText)
+      }
+      if (range === '500ml – 1L+') {
+        return /\b([5-9]\d{2}|1000)ml\b/.test(sizeText) ||
+          /\b1\s*litre\b/i.test(sizeText) ||
+          /\b1[lL]\b/.test(sizeText)
+      }
+      return false
+    })
+  })
+}
+
     // Deals filter
     if (selectedDeals.includes('Bulk Discount')) {
       filtered = filtered.filter(p => p.wholesale_price < p.retail_price)
