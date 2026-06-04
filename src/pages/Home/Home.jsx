@@ -54,7 +54,6 @@ function Home() {
   setFeaturedProducts(featured)
   setDealsProducts(deals)
   setAllProducts(all)
-  console.log('All products loaded:', all.length)
   setLoading(false)
 }
     loadProducts()
@@ -76,7 +75,6 @@ function Home() {
 
   // Take first 4 — guaranteed unique since we shuffled in place
    const picked = arr.slice(0, 4)
-  console.log('Picked cards:', picked.map(p => ({ id: p.id, name: p.name })))
   setCardProducts(picked)
 }
 

@@ -1,3 +1,4 @@
+import { supabase } from './supabase'
 export async function createOrder(orderData) {
   const { data, error } = await supabase
     .from('orders')

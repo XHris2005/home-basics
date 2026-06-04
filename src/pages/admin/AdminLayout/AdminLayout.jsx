@@ -66,12 +66,13 @@ function AdminLayout({ children }) {
   const [notifCount, setNotifCount] = useState(0)
 
 useEffect(() => {
+  if (!user) return
   async function fetchNotifCount() {
-    const { count } = await supabase
+    const { count, error } = await supabase
       .from('admin_notifications')
       .select('*', { count: 'exact', head: true })
       .eq('is_read', false)
-    setNotifCount(count || 0)
+    if (!error) setNotifCount(count || 0)
   }
   fetchNotifCount()
   const interval = setInterval(fetchNotifCount, 30000)
@@ -81,7 +82,7 @@ useEffect(() => {
     clearInterval(interval)
     window.removeEventListener('notifs-cleared', handleClear)
   }
-}, [])
+}, [user])
   async function handleLogout() {
     await logout()
     navigate('/login')
