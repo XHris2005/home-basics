@@ -30,6 +30,7 @@ import AuthCallback from '../pages/AuthCallback/AuthCallback'
 import RegisterSuccess from '../pages/RegisterSuccess/RegisterSuccess'
 import ResetPassword from '../pages/ResetPassword/ResetPassword'
 import Privacy from '../pages/Privacy/Privacy'
+import About from '../pages/About/About'
 
 function AppRoutes() {
   return (
@@ -44,6 +45,7 @@ function AppRoutes() {
       <Route path="/login" element={<Login />} />
       <Route path="/register" element={<Register />} />
       <Route path="/become-member" element={<BecomeMember />} />
+      <Route path="/about" element={<About />} />
       <Route path="/forgot-password" element={<ForgotPassword />} />
       <Route path="/auth/callback" element={<AuthCallback />} />
       <Route path="/privacy" element={<Privacy />} />

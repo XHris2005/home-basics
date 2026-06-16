@@ -579,6 +579,17 @@
   font-style: italic;
   margin-top: 4px;
 }
+.pd-add-cart-btn--added {
+  background: #f0fdf4;
+  color: var(--color-primary);
+  border: 2px solid var(--color-primary);
+  cursor: default;
+  opacity: 1 !important;
+}
+.pd-add-cart-btn--added:hover {
+  background: #f0fdf4;
+  color: var(--color-primary);
+}
 /* Responsive */
 @media (max-width: 1024px) {
   .pd-layout { grid-template-columns: 1fr; }

@@ -99,7 +99,7 @@ function Footer() {
           </div>
           <div className="footer-col">
             <p className="footer-col-title">Company</p>
-            <span className="footer-link">About Homebasics</span>
+            <Link to="/about" className="footer-link">About Homebasics</Link>
             <Link to="/become-member" className="footer-link">Membership</Link>
             <Link to="/privacy" className="footer-link">Privacy Policy</Link>
           </div>

@@ -13,7 +13,7 @@ function formatPrice(price) {
 function ProductDetail() {
   const { slug } = useParams()
   const { user, isMember } = useAuth()
-  const { addItem } = useCart()
+  const { addItem, removeItem } = useCart()
   const [product, setProduct] = useState(null)
   const [loading, setLoading] = useState(true)
   const [selectedImage, setSelectedImage] = useState(0)
@@ -25,6 +25,7 @@ function ProductDetail() {
   const [selectedFragrance, setSelectedFragrance] = useState(null)
   const [selectedSize, setSelectedSize] = useState(null)
   const [selectedVariant, setSelectedVariant] = useState(null)
+  const [cartQty, setCartQty] = useState(0)
 
   useEffect(() => {
     async function load() {
@@ -59,6 +60,7 @@ function ProductDetail() {
   setSelectedSize(null)
   setSelectedVariant(null)
   setSelectedImage(0)
+  setCartQty(0)
   // Preview first variant image for this fragrance immediately
   if (selectedFragrance) {
     const preview = variants.find(v => v.fragrance === selectedFragrance)
@@ -68,7 +70,7 @@ function ProductDetail() {
 
   // When size changes, find the matching variant
   useEffect(() => {
-    if (!selectedSize) { setSelectedVariant(null); return }
+    if (!selectedSize) { setSelectedVariant(null); setCartQty(0); return }
     const match = variants.find(v =>
       v.size === selectedSize &&
       (!hasFragrances || v.fragrance === selectedFragrance)
@@ -289,21 +291,65 @@ const activeImages = selectedVariant?.images?.length
               )}
 
               {/* Quantity + Add to Cart */}
-              <div className="pd-actions">
-                <div className="pd-quantity">
-                  <button className="pd-qty-btn" onClick={() => setQuantity(q => Math.max(1, q - 1))}>−</button>
-                  <span className="pd-qty-value">{quantity}</span>
-                  <button className="pd-qty-btn" onClick={() => setQuantity(q => q + 1)}>+</button>
-                </div>
-                <button
-                  className="pd-add-cart-btn"
-                  disabled={!canAddToCart}
-                  style={{ opacity: canAddToCart ? 1 : 0.5, cursor: canAddToCart ? 'pointer' : 'not-allowed' }}
-                  onClick={() => canAddToCart && addItem(product, quantity, selectedVariant)}
-                >
-                  🛒 {canAddToCart ? 'Add to Cart' : hasFragrances && !selectedFragrance ? 'Select Fragrance' : 'Select Size'}
-                </button>
-              </div>
+              {/* Quantity + Add to Cart */}
+<div className="pd-actions">
+  <div className="pd-quantity">
+    <button
+      className="pd-qty-btn"
+      onClick={() => {
+  const newQty = quantity - 1
+  if (newQty < 1) {
+    setQuantity(1)
+    if (cartQty > 0) {
+      const variantKey = selectedVariant?.size || 'default'
+      const itemId = `${product.id}-${variantKey}`
+      removeItem(itemId)
+      setCartQty(0)
+    }
+    return
+  }
+  setQuantity(newQty)
+  if (cartQty > 0) {
+    setCartQty(newQty)
+    addItem(product, newQty, selectedVariant)
+  }
+}}
+    >−</button>
+    <span className="pd-qty-value">{quantity}</span>
+    <button
+      className="pd-qty-btn"
+      onClick={() => {
+        const newQty = quantity + 1
+        setQuantity(newQty)
+        if (cartQty > 0) {
+          setCartQty(newQty)
+          addItem(product, newQty, selectedVariant)
+        }
+      }}
+    >+</button>
+  </div>
+  {cartQty === 0 ? (
+    <button
+      className="pd-add-cart-btn"
+      disabled={!canAddToCart}
+      style={{ opacity: canAddToCart ? 1 : 0.5, cursor: canAddToCart ? 'pointer' : 'not-allowed' }}
+      onClick={() => {
+        if (!canAddToCart) return
+        addItem(product, quantity, selectedVariant)
+        setCartQty(quantity)
+      }}
+    >
+      🛒 {canAddToCart ? 'Add to Cart' : hasFragrances && !selectedFragrance ? 'Select Fragrance' : 'Select Size'}
+    </button>
+  ) : (
+    <button
+      className="pd-add-cart-btn pd-add-cart-btn--added"
+      disabled
+    >
+      ✓ {cartQty} Added
+    </button>
+  )}
+</div>
             </div>
           </div>
 
