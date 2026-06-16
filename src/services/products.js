@@ -71,18 +71,18 @@ export async function getAllProducts(filters = {}) {
   }
 
   if (filters.category) {
-    const { data: catData } = await supabase
-      .from('categories')
-      .select('id')
-      .eq('name', filters.category)
-      .maybeSingle()
+  const { data: catData } = await supabase
+    .from('categories')
+    .select('id')
+    .eq('name', filters.category)
+    .maybeSingle()
 
-    if (catData?.id) {
-      query = query.eq('category_id', catData.id)
-    } else {
-      return []
-    }
+  if (catData?.id) {
+    query = query.eq('category_id', catData.id)
+  } else {
+    query = query.eq('subcategory', filters.category)
   }
+}
 
   if (filters.minPrice) query = query.gte('retail_price', filters.minPrice)
   if (filters.maxPrice) query = query.lte('retail_price', filters.maxPrice)

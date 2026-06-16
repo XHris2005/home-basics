@@ -7,12 +7,12 @@ import './Navbar.css'
 
 
 const categoryData = [
-  { name: 'Personal Care & Hygiene', subcategories: ['Toothpaste & Brushes', 'Feminine Hygiene', 'Cotton & Swabs', 'Hand Sanitizers'] },
-  { name: 'Skincare', subcategories: ['Body Lotions', 'Body Wash', 'Toners & Facial Care', 'Lip Balm', 'Deodorants'] },
-  { name: 'Baby Care', subcategories: ['Baby Lotion', 'Baby Wash', 'Diapers', 'Baby Wipes'] },
-  { name: 'Tea & Beverages', subcategories: ['Teas', 'Juices', 'Energy Drinks', 'Water'] },
-  { name: 'Snacks & Food', subcategories: ['Snacks', 'Cereals', 'Condiments', 'Food Items'] },
-  { name: 'Supplements', subcategories: ['Vitamins', 'Minerals', 'Protein', 'Herbal'] },
+  { name: 'Personal Care & Hygiene', subcategories: ['Toothpaste & Brushes', 'Feminine Hygiene'] },
+  { name: 'Skincare', subcategories: ['Body Lotions', 'Body Wash', 'Body Butter', 'Body Oil', 'Facial Care', 'Scrubs', 'Soap', 'Deodorants'] },
+  { name: 'Baby Care', subcategories: ['Diapers'] },
+  { name: 'Tea & Beverages', subcategories: ['Teas'] },
+  { name: 'Snacks & Food', subcategories: ['Snacks'] },
+  { name: 'Supplements', subcategories: ['Vitamins', 'Capsules & Softgels'] },
 ]
 
 function Navbar() {

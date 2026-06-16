@@ -7,28 +7,6 @@ import { cloudinaryOptimize } from '../../utils/formatters'
 import crown from "../../assets/crown.png";
 import './Home.css'
 
-function useScrollReveal() {
-  const ref = useRef(null)
-  useEffect(() => {
-    const el = ref.current
-    if (!el) return
-
-    setTimeout(() => {
-      const observer = new IntersectionObserver(
-        ([entry]) => {
-          if (entry.isIntersecting) {
-            el.classList.add('visible')
-            observer.unobserve(el)
-          }
-        },
-        { threshold: 0, rootMargin: '0px 0px -60px 0px' }
-      )
-      observer.observe(el)
-    }, 150)
-
-  }, [])
-  return ref
-}
 
 function Home() {
   const { isMember } = useAuth()
@@ -38,11 +16,6 @@ function Home() {
   const [loading, setLoading] = useState(true)
   const [cardProducts, setCardProducts] = useState([])
 
-  const memberBannerRef  = useScrollReveal()
-  const featuredRef      = useScrollReveal()
-  const wholesaleRef     = useScrollReveal()
-  const dealsRef         = useScrollReveal()
-  const becomeMemberRef  = useScrollReveal()
 
   useEffect(() => {
     async function loadProducts() {
@@ -82,14 +55,6 @@ function Home() {
   const interval = setInterval(pickRandom, 6000)
   return () => clearInterval(interval)
 }, [allProducts])
-
-  useEffect(() => {
-  const timer = setTimeout(() => {
-    document.querySelectorAll('.fade-in-up').forEach(el => el.classList.add('visible'))
-  }, 1500)
-  return () => clearTimeout(timer)
-}, [])
-
 
   if (loading) return (
     <div style={{ display: 'flex', justifyContent: 'center', padding: '4rem' }}>
@@ -194,7 +159,7 @@ function Home() {
 </section>
 
       {/* ── MEMBER DISCOUNT BANNER ── */}
-      <section ref={memberBannerRef} className="member-banner fade-in-up">
+      <section  className="member-banner ">
         <div className="member-banner-inner">
           <div className="member-banner-left">
             <p className="member-banner-title">Get Exclusive Member Discounts</p>
@@ -207,7 +172,7 @@ function Home() {
       </section>
 
       {/* ── FEATURED PRODUCTS ── */}
-      <section ref={featuredRef} className="products-section fade-in-up">
+      <section  className="products-section ">
         <div className="section-inner">
           <div className="section-header">
             <div>
@@ -230,7 +195,7 @@ function Home() {
       </section>
 
       {/* ── WHOLESALE CTA BANNER ── */}
-<section ref={wholesaleRef} className="wholesale-banner-section fade-in-up">
+<section  className="wholesale-banner-section ">
   <div className="wholesale-banner">
     <div className="wholesale-banner-inner">
       <div className="wholesale-banner-left">
@@ -247,7 +212,7 @@ function Home() {
       <div className="wholesale-banner-right">
         <div className="wholesale-overlap-stack">
           <div className="wholesale-overlap-img wholesale-overlap-img--back">
-            <img src={cloudinaryOptimize("https://res.cloudinary.com/db2a43rey/image/upload/v1777816636/1777735906221_i9q18v.jpg", 300)} alt="Shea Butter" />
+            <img src={cloudinaryOptimize("https://res.cloudinary.com/db2a43rey/image/upload/v1780458281/photo_2026-06-03_04-37-19_i7hu4s.jpg", 300)} alt="Classic Shea Butter" />
           </div>
           <div className="wholesale-overlap-img wholesale-overlap-img--mid">
             <img src={cloudinaryOptimize("https://res.cloudinary.com/db2a43rey/image/upload/v1777816648/enhanced_product_hv213t.png", 300)} alt="Deluxe Shea Butter" />
@@ -262,7 +227,7 @@ function Home() {
 </section>
 
       {/* ── OREKELEWA DEALS ── */}
-      <section ref={dealsRef} className="products-section fade-in-up">
+      <section className="products-section">
         <div className="section-inner">
           <div className="section-header">
             <div>
@@ -285,7 +250,7 @@ function Home() {
       </section>
 
       {/* ── BECOME A MEMBER ── */}
-      <section ref={becomeMemberRef} className="become-member-section fade-in-up">
+      <section className="become-member-section">
         <div className="become-member-inner">
           <div className="become-member-crown">
             <img src={crown} alt="crown" style={{ width: '52px', height: '44px' }} />

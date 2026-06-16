@@ -25,12 +25,12 @@ export function CartProvider({ children }) {
         item => item.product.id === product.id && item.variantKey === variantKey
       )
       if (existing) {
-        return prev.map(item =>
-          item.product.id === product.id && item.variantKey === variantKey
-            ? { ...item, quantity: item.quantity + quantity }
-            : item
-        )
-      }
+  return prev.map(item =>
+    item.product.id === product.id && item.variantKey === variantKey
+      ? { ...item, quantity: quantity }
+      : item
+  )
+}
       return [...prev, {
         id: `${product.id}-${variantKey}`,
         product,
